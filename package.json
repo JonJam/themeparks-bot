@@ -4,14 +4,28 @@
   "private": true,
   "scripts": {
     "precommit": "lint-staged",
-    "start": "node ./bin/www"
+    "start": "npm run build && npm run watch",
+    "build": "npm run security-check && npm run build-ts && npm run lint-ts",
+    "build-ts": "tsc",
+    "lint-ts": "tslint -c tslint.json -p tsconfig.json",
+    "watch": "npm-run-all watch-ts start-dev",
+    "watch-ts": "tsc -w",
+    "serve": "node dist/server.js",
+    "serve-dev": "nodemon dist/server.js",
+    "server-dev-debug": "nodemon --inspect dist/server.js",
+    "security-check": "nsp check"
   },
   "dependencies": {
     "express": "~4.15.5"
   },
   "devDependencies": {
+    "@types/express": "^4.0.39",
+    "@types/node": "^8.0.49",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
+    "nodemon": "^1.12.1",
+    "npm-run-all": "^4.1.1",
+    "nsp": "^3.1.0",
     "prettier": "^1.7.4",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
@@ -19,6 +33,9 @@
     "typescript": "^2.6.1"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,ts,tsx,css,scss}": ["prettier --write", "git add"]
+    "src/**/*.{js,jsx,json,ts,tsx,css,scss}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
