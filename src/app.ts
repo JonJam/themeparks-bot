@@ -3,6 +3,7 @@ import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 
 // TODO Sort out anys
+// TODO Sort out tslint disables
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
+// tslint:disable:variable-name
 app.use((_req: any, _res: any, next: any) => {
   const err: any = new Error("Not Found");
   err.status = 404;

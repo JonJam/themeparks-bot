@@ -2,6 +2,7 @@ import { createServer } from "http";
 import app from "./app";
 
 // TODO Sort out anys
+// TODO Sort out tslint disables
 
 /**
  * Get port from environment and store in Express.
@@ -14,7 +15,7 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-const server = createServer(app);
+const server = createServer(app as any);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -29,16 +30,16 @@ server.on("listening", onListening);
  */
 
 function normalizePort(val: any) {
-  const port = parseInt(val, 10);
+  const parsedPort = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(parsedPort)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (parsedPort >= 0) {
     // port number
-    return port;
+    return parsedPort;
   }
 
   return false;
@@ -53,15 +54,17 @@ function onError(error: any) {
     throw error;
   }
 
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
+      // tslint:disable:no-console
       console.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
     case "EADDRINUSE":
+      // tslint:disable:no-console
       console.error(bind + " is already in use");
       process.exit(1);
       break;
@@ -75,7 +78,8 @@ function onError(error: any) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  const addr = server.address();
+  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  // tslint:disable:no-console
   console.log("Listening on " + bind);
 }
