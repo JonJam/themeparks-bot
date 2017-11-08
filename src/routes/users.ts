@@ -1,13 +1,9 @@
 import express = require("express");
-
-// TODO Sort out tslint disables
+import { get } from "../controllers/usersController";
 
 const router = express.Router();
 
 /* GET users listing. */
-// tslint:disable:variable-name
-router.get("/", (_req, res) => {
-  res.send("respond with a resource");
-});
+router.get("/", get);
 
 export default router;

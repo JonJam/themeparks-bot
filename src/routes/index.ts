@@ -1,13 +1,9 @@
 import express = require("express");
-
-// TODO Sort out tslint disables
+import { get } from "../controllers/indexController";
 
 const router = express.Router();
 
 /* GET home page. */
-// tslint:disable:variable-name
-router.get("/", (_req, res) => {
-  res.send("index");
-});
+router.get("/", get);
 
 export default router;
