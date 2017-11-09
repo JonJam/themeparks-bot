@@ -9,12 +9,28 @@
           "request": "launch",
           "name": "Debug",
           "program": "${workspaceRoot}/dist/server.js",
+          "restart": true,
           "smartStep": true,
           "outFiles": [
-              "../dist/**/*.js"
+              "${workspaceRoot}/dist/**/*.js"
           ],
           "preLaunchTask": "npm: build",
           "protocol": "inspector"
+      },
+      {
+        "type": "node",
+        "request": "attach",
+        "name": "Debug in Docker",
+        "port": 9222,
+        "restart": true,
+        "smartStep": true,
+        "localRoot": "${workspaceRoot}",
+        "remoteRoot": "/app",
+        "outFiles": [
+          "${workspaceRoot}/dist/**/*.js"
+        ]
+        ,
+        "protocol": "inspector"
       }
   ]
 }
