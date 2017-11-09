@@ -1,11 +1,9 @@
-import { createServer } from "http";
 import debug = require("debug");
+import { createServer } from "http";
 import app from "./app";
 
 // Using debug per best practise: https://expressjs.com/en/advanced/best-practice-performance.html#do-logging-correctly
 const log = debug("server");
-
-// TODO Sort out anys
 
 /**
  * Get port from environment and store in Express.
@@ -14,10 +12,8 @@ const log = debug("server");
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-/**
- * Create HTTP server.
- */
-
+// Create HTTP server.
+// Workaround: Using any as the Express and createServer types are not compatible.
 const server = createServer(app as any);
 
 /**
@@ -32,7 +28,7 @@ server.on("listening", onListening);
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val: any) {
+function normalizePort(val: string) {
   const parsedPort = parseInt(val, 10);
 
   if (isNaN(parsedPort)) {
@@ -52,7 +48,7 @@ function normalizePort(val: any) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error: any) {
+function onError(error: NodeJS.ErrnoException) {
   if (error.syscall !== "listen") {
     throw error;
   }

@@ -1,11 +1,11 @@
 import compression = require("compression");
 import express = require("express");
+import { Request, Response } from "express";
+import { NextFunction } from "express-serve-static-core";
 import helmet = require("helmet");
+import StatusError from "./errors/StatusError";
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
-
-// TODO Sort out anys
-// TODO Sort out tslint disables
 
 const app = express();
 
@@ -19,23 +19,31 @@ app.use(compression());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-// catch 404 and forward to error handler
+// 404 - error handler
 // tslint:disable:variable-name
-app.use((_req: any, _res: any, next: any) => {
-  const err: any = new Error("Not Found");
-  err.status = 404;
-  next(err);
-});
+app.use(
+  (
+    _req: express.Request,
+    _res: express.Response,
+    next: express.NextFunction
+  ) => {
+    next(new StatusError("Not Found", 404));
+  }
+);
 
-// error handler
-app.use((err: any, req: any, res: any) => {
-  // set locals, only providing error in development
+// 500 - error handler
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  // Checking if headers sent per recommendation: https://expressjs.com/en/guide/error-handling.html
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // set locals, only providing error in development.
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
-  res.send("error");
+  res.send();
 });
 
 export default app;
