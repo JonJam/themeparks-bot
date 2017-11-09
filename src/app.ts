@@ -1,4 +1,5 @@
 import express = require("express");
+import compression = require("compression");
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 
@@ -6,6 +7,10 @@ import usersRouter from "./routes/users";
 // TODO Sort out tslint disables
 
 const app = express();
+
+// Middleware
+// Using gzip compression per best practise: https://expressjs.com/en/advanced/best-practice-performance.html#use-gzip-compression
+app.use(compression());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
