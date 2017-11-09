@@ -1,5 +1,6 @@
-import express = require("express");
 import compression = require("compression");
+import express = require("express");
+import helmet = require("helmet");
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 
@@ -9,6 +10,8 @@ import usersRouter from "./routes/users";
 const app = express();
 
 // Middleware
+// Using helmet per best practise: https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
+app.use(helmet());
 // Using gzip compression per best practise: https://expressjs.com/en/advanced/best-practice-performance.html#use-gzip-compression
 app.use(compression());
 
