@@ -18,11 +18,13 @@
   },
   "dependencies": {
     "compression": "^1.7.1",
+    "debug": "^3.1.0",
     "express": "~4.15.5",
     "helmet": "^3.9.0"
   },
   "devDependencies": {
     "@types/compression": "^0.0.35",
+    "@types/debug": "^0.0.30",
     "@types/express": "^4.0.39",
     "@types/helmet": "^0.0.37",
     "@types/jest": "^21.1.5",

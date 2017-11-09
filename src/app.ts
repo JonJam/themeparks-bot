@@ -15,6 +15,7 @@ app.use(helmet());
 // Using gzip compression per best practise: https://expressjs.com/en/advanced/best-practice-performance.html#use-gzip-compression
 app.use(compression());
 
+// Routes
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 

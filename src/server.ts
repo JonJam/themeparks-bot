@@ -1,8 +1,11 @@
 import { createServer } from "http";
+import debug = require("debug");
 import app from "./app";
 
+// Using debug per best practise: https://expressjs.com/en/advanced/best-practice-performance.html#do-logging-correctly
+const log = debug("server");
+
 // TODO Sort out anys
-// TODO Sort out tslint disables
 
 /**
  * Get port from environment and store in Express.
@@ -59,13 +62,11 @@ function onError(error: any) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
-      // tslint:disable:no-console
-      console.error(bind + " requires elevated privileges");
+      log(bind + " requires elevated privileges");
       process.exit(1);
       break;
     case "EADDRINUSE":
-      // tslint:disable:no-console
-      console.error(bind + " is already in use");
+      log(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -80,6 +81,5 @@ function onError(error: any) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  // tslint:disable:no-console
-  console.log("Listening on " + bind);
+  log("Listening on " + bind);
 }
