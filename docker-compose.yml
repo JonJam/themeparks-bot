@@ -3,9 +3,9 @@ version: "3"
 services:
   web:
     build: .
-    command: yarn run start
+    command: yarn run serve-dev
     volumes:
-      - .:/app/
+      - ./dist:/app/dist
     ports:
       - "8080:8080"
-      - "9222:9222"
+      - "9229:9229"
