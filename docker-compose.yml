@@ -6,7 +6,7 @@ services:
       context: .
       args:
         nodeEnv: development
-    command: yarn run serve-dev
+    command: yarn run start-dev
     volumes:
       - ./dist:/app/dist
     ports:

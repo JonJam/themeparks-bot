@@ -4,14 +4,13 @@
   "private": true,
   "scripts": {
     "precommit": "lint-staged",
-    "start": "npm run build && npm run watch",
+    "start": "node dist/server.js",
+    "start-dev": "nodemon --inspect=0.0.0.0:9229 dist/server.js",
+    "build-watch": "npm run build && npm-run-all -p watch start-dev",
     "build": "npm run security-check && npm run build-ts && npm run lint-ts",
     "build-ts": "tsc",
     "lint-ts": "tslint -c tslint.json -p tsconfig.lint.json -t stylish --force",
-    "watch": "npm-run-all -p watch-ts serve-dev",
-    "watch-ts": "tsc -w",
-    "serve": "node dist/server.js",
-    "serve-dev": "nodemon --inspect=0.0.0.0:9229 dist/server.js",
+    "watch": "tsc -w",
     "security-check": "nsp check",
     "test": "jest",
     "docker-debug": "docker-compose up"

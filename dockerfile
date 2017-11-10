@@ -1,5 +1,4 @@
 # Production build requires "yarn build" to have been run.
-
 # TODO Use tini: https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#handling-kernel-signals
 FROM node:carbon
 
@@ -22,6 +21,5 @@ EXPOSE 8080
 # Best practise: https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node
 
-# TODO Change to node index.js
-# See https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#environment-variables
-CMD [ "yarn", "run", "serve" ]
+# Best practise: https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#environment-variables
+CMD [ "node", "dist/server.js" ]
