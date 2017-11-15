@@ -3,8 +3,8 @@ import express = require("express");
 import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import helmet = require("helmet");
-import StatusError from "./errors/StatusError";
 import connector from "./bot";
+import StatusError from "./errors/StatusError";
 
 const app = express();
 
