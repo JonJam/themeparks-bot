@@ -1,12 +1,12 @@
 import { ChatConnector, IConversationUpdate, UniversalBot } from "botbuilder";
-import defaultDialog from "./dialogs/default";
 import { appId, appPassword } from "../settings";
+import defaultDialog from "./dialogs/default";
 import greetings from "./dialogs/greetings";
 
 // Create chat connector for communicating with the Bot Framework Service
 const connector = new ChatConnector({
-  appId: appId,
-  appPassword: appPassword
+  appId,
+  appPassword
 });
 
 const bot = new UniversalBot(connector, defaultDialog);
