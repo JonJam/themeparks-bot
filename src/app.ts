@@ -1,12 +1,10 @@
-import { UniversalBot } from "botbuilder";
 import compression = require("compression");
 import express = require("express");
 import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import helmet = require("helmet");
-import defaultDialog from "./dialogs/default";
 import StatusError from "./errors/StatusError";
-import chatConnector from "./routes/messages";
+import connector from "./bot";
 
 const app = express();
 
@@ -17,10 +15,7 @@ app.use(helmet());
 app.use(compression());
 
 // Routes
-app.post("/api/messages", chatConnector.listen());
-
-// tslint:disable:no-unused-expression
-new UniversalBot(chatConnector, defaultDialog);
+app.post("/api/messages", connector.listen());
 
 // 404 - error handler
 // tslint:disable:variable-name

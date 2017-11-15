@@ -15,7 +15,8 @@
     "noUnusedParameters": true,
     "noEmitOnError": true,
     "removeComments": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictNullChecks": false // Disabled in order to allow null to be passed for error param in Node callbacks.
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
