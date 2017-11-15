@@ -1,16 +1,8 @@
 import { Session } from "botbuilder";
+import strings from "../../strings";
 
 // https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-dialog-overview#default-dialog
-// First response to a user.
+// Called whenever the dialog stack is empty and no other dialog triggered.
 export default function defaultDialog(session: Session) {
-  const shownWelcomeNewUserMessage: boolean | undefined =
-    session.userData.shownWelcomeNewUserMessage;
-
-  if (shownWelcomeNewUserMessage === undefined) {
-    session.send("Hi I am Theme Park Bot. How can I help?");
-
-    session.userData.shownWelcomeNewUserMessage = true;
-  } else if (shownWelcomeNewUserMessage === true) {
-    session.send("Welcome back! How can I help?");
-  }
+  session.endDialog(strings.default.message);
 }
