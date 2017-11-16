@@ -1,6 +1,9 @@
 import { config } from "dotenv";
 
-config();
+if (process.env.NODE_ENV === "development") {
+  // Used only in development to load environment variables from local file.
+  config();
+}
 
 export const appId = process.env.MICROSOFT_APP_ID;
 export const appPassword = process.env.MICROSOFT_APP_PASSWORD;

@@ -16,6 +16,7 @@ const connector = new ChatConnector({
 
 const bot = new UniversalBot(connector, defaultDialog);
 bot.recognizer(new LuisRecognizer(luisAppUrl));
+bot.library(greetings.clone());
 
 // This may not be supported by all channcels, see alternative: https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-handle-conversation-events
 bot.on("conversationUpdate", (message: IConversationUpdate) => {
@@ -38,7 +39,5 @@ bot.on("conversationUpdate", (message: IConversationUpdate) => {
     });
   }
 });
-
-bot.library(greetings.clone());
 
 export default connector;
