@@ -1,0 +1,3 @@
+[submodule "src/@types/themeparks"]
+	path = src/@types/themeparks
+	url = https://github.com/JonJam/types-themeparks

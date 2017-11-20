@@ -16,7 +16,9 @@ lib
       session.userData.shownWelcomeNewUserMessage = true;
     }
 
-    session.endDialog(message);
+    session.send(message);
+
+    session.beginDialog("parks:whichPark");
   })
   .triggerAction({
     // LUIS intent

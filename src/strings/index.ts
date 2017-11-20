@@ -11,8 +11,8 @@ export default {
       message: "Bye."
     },
     hello: {
-      welcomeBack: "Welcome back! How can I help?",
-      welcomeNew: "Hi I am Theme Park Bot. How can I help?"
+      welcomeBack: "Welcome back!",
+      welcomeNew: "Hi I am Theme Park Bot."
     }
   }
 };
