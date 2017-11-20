@@ -1,6 +1,16 @@
+declare function require(moduleName: string): any;
+
+if (process.env.NODE_ENV !== "production") {
+  // Used only in development to load environment variables from local file.
+  const dotenv: any = require("dotenv");
+
+  dotenv.config();
+}
+
 export const appId = process.env.MICROSOFT_APP_ID;
 export const appPassword = process.env.MICROSOFT_APP_PASSWORD;
 export const port = normalizePort(process.env.PORT || "8080");
+export const luisAppUrl = process.env.LUIS_APP_URL;
 
 /**
  * Normalize a port into a number, string, or false.
