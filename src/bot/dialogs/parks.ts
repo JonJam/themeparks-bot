@@ -1,15 +1,13 @@
 import { CardAction, Library, Message, SuggestedActions } from "botbuilder";
-import themeparks from "themeparks";
+// import themeparks = require("themeparks");
 
 const lib = new Library("parks");
 
 lib.dialog("whichPark", [
   function(session) {
-    // TODO Replace with strings
-    // TODO Handling a result which isn't expected.
-
     // https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-send-suggested-actions
     const message = new Message(session)
+      // TODO replace with strings
       .text("Which park are you interested in?")
       .suggestedActions(
         SuggestedActions.create(session, [
@@ -22,6 +20,7 @@ lib.dialog("whichPark", [
     session.send(message);
   },
   function(session, results) {
+    // TODO handle a result which isn't expected.
     session.endDialogWithResult(results);
   }
 ]);

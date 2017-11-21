@@ -16,10 +16,11 @@
     "noEmitOnError": true,
     "removeComments": true,
     "skipLibCheck": true,
-    "strictNullChecks": false // Disabled in order to allow null to be passed for error param in Node callbacks.
+    "strictNullChecks": false, // Disabled in order to allow null to be passed for error param in Node callbacks.
+    "baseUrl": "./",
+    "paths": {
+      "themeparks":["src/@types/themeparks/types/themeparks/index.d.ts"]
+    }
   },
-  "include": [
-    "./src/@types/themeparks/types/themeparks/index.d.ts"
-  ],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
