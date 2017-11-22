@@ -18,6 +18,7 @@ lib
 
     session.send(message);
 
+    // TODO Handle result of this dialog.
     session.beginDialog("parks:whichPark");
   })
   .triggerAction({

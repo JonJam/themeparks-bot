@@ -1,6 +1,5 @@
 import themeparks = require("themeparks");
 
-// TODO See if need
 // Map of theme park name to class.
 export const parksMap = new Map(
   themeparks.AllParks.map(Park => {
@@ -11,9 +10,3 @@ export const parksMap = new Map(
     return [park.Name, Park] as [string, any];
   })
 );
-
-export const suggestedParks: ReadonlyArray<string> = [
-  "Magic Kingdom - Walt Disney World Florida",
-  "Seaworld Orlando",
-  "Universal Studios Florida"
-];
