@@ -1,25 +1,31 @@
-import { Library, Prompts, ListStyle } from "botbuilder";
-import { parksMap } from "../../services/parks";
+import {
+  IDialogResult,
+  IPromptChoiceResult,
+  Library,
+  ListStyle,
+  Prompts
+} from "botbuilder";
+import { parkNames } from "../../services/parks";
+import strings from "../../strings";
 
 const lib = new Library("parks");
 
 lib.dialog("whichPark", [
-  function(session) {
-    const choices: string[] = [];
-
-    // TODO Sort this
-    for (let key of parksMap.keys()) {
-      choices.push(key);
-    }
-
-    // TODO replace with strings
-    Prompts.choice(session, "Which park are you interested in?", choices, {
-      listStyle: ListStyle.auto
+  session => {
+    Prompts.choice(session, strings.parks.whichPark.prompt, parkNames, {
+      listStyle: ListStyle.auto,
+      retryPrompt: strings.parks.whichPark.retryPrompt
     });
   },
-  function(session, results) {
-    // TODO handle a result
-    session.endDialogWithResult(results);
+
+  (session, results: IPromptChoiceResult) => {
+    const chosenPark = results.response.entity;
+
+    const dialogResult: IDialogResult<string> = {
+      response: chosenPark
+    };
+
+    session.endDialogWithResult(dialogResult);
   }
 ]);
 

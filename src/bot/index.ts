@@ -27,7 +27,7 @@ bot.on("conversationUpdate", (message: IConversationUpdate) => {
       if (identity.id === message.address.bot.id) {
         // Bot added to conversation, so display welcome message.
         // https://github.com/Microsoft/BotBuilder-Samples/tree/master/Node/demo-ContosoFlowers#welcome-message
-        bot.beginDialog(message.address, "greetings:hello");
+        bot.beginDialog(message.address, "/");
       }
     });
   }

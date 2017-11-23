@@ -9,7 +9,7 @@
     "build-watch": "npm run build && npm-run-all -p watch start-dev",
     "build": "npm run security-check && npm run build-ts && npm run lint-ts",
     "build-ts": "tsc",
-    "lint-ts": "tslint -c tslint.json -p tsconfig.lint.json -t stylish --force",
+    "lint-ts": "tslint -c tslint.json -p tsconfig.lint.json -t stylish --force -e \"**/@types/**\"",
     "watch": "tsc -w",
     "security-check": "nsp check",
     "test": "jest",

@@ -2,6 +2,7 @@ declare function require(moduleName: string): any;
 
 if (process.env.NODE_ENV !== "production") {
   // Used only in development to load environment variables from local file.
+  // tslint:disable:no-var-requires
   const dotenv: any = require("dotenv");
 
   dotenv.config();
