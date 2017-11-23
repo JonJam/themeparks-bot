@@ -29,6 +29,10 @@ lib.dialog("whichPark", [
   }
 ]);
 
+lib.dialog("stillInterestedInPark", [
+  // TODO Implement this
+]);
+
 lib.dialog("parkIntro", [
   (session, args: IParkIntroArgs) => {
     session.send(strings.parks.parkIntro.message1 + args.parkName);
@@ -40,5 +44,9 @@ lib.dialog("parkIntro", [
 export default lib;
 
 export interface IParkIntroArgs {
+  parkName: string;
+}
+
+export interface IStillInterestedInParkArgs {
   parkName: string;
 }
