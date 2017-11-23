@@ -6,8 +6,7 @@ const parksMap = new Map(
     // Creating to get name of park.
     const park = new Park();
 
-    // TODO Replace any with Park from themeparks
-    return [park.Name, Park] as [string, any];
+    return [park.Name, Park] as [string, typeof Park];
   })
 );
 
