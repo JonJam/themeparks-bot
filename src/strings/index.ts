@@ -1,7 +1,5 @@
 export default {
-  default: {
-    parkSelected: "You selected: "
-  },
+  default: {},
   greetings: {
     goodbye: {
       message: "Bye."
@@ -19,6 +17,10 @@ export default {
     }
   },
   parks: {
+    parkIntro: {
+      message1: "You selected: ",
+      message2: "Try asking questions about rides and operating hours."
+    },
     whichPark: {
       prompt: "Which park are you interested in?",
       retryPrompt:

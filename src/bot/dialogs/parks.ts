@@ -29,4 +29,16 @@ lib.dialog("whichPark", [
   }
 ]);
 
+lib.dialog("parkIntro", [
+  (session, args: IParkIntroArgs) => {
+    session.send(strings.parks.parkIntro.message1 + args.parkName);
+
+    session.endDialog(strings.parks.parkIntro.message2);
+  }
+]);
+
 export default lib;
+
+export interface IParkIntroArgs {
+  parkName: string;
+}

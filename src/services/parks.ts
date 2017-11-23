@@ -6,7 +6,8 @@ const parksMap = new Map(
     // Creating to get name of park.
     const park = new Park();
 
-    return [park.Name, Park] as [string, typeof Park];
+    // TODO: This seems smelly that storing all created Park objects.
+    return [park.Name, park] as [string, typeof park];
   })
 );
 
