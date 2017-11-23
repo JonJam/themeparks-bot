@@ -21,6 +21,10 @@ export default {
       message1: "You selected: ",
       message2: "Try asking questions about rides and operating hours."
     },
+    stillInterestedInPark: {
+      prompt1: "Are you still interested in ",
+      prompt2: " ?"
+    },
     whichPark: {
       prompt: "Which park are you interested in?",
       retryPrompt:

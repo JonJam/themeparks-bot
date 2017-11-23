@@ -3,7 +3,8 @@ import {
   IPromptChoiceResult,
   Library,
   ListStyle,
-  Prompts
+  Prompts,
+  IPromptConfirmResult
 } from "botbuilder";
 import { parkNames } from "../../services/parks";
 import strings from "../../strings";
@@ -30,7 +31,17 @@ lib.dialog("whichPark", [
 ]);
 
 lib.dialog("stillInterestedInPark", [
-  // TODO Implement this
+  (session, args: IStillInterestedInParkArgs) => {
+    const prompt = `${strings.parks.stillInterestedInPark
+      .prompt1}${args.parkName}${strings.parks.stillInterestedInPark.prompt2}`;
+
+    Prompts.confirm(session, prompt);
+  },
+
+  (session, results: IPromptConfirmResult) => {
+    // TODO If Yes return theme park name
+    // TODO if no launch the which park.
+  }
 ]);
 
 lib.dialog("parkIntro", [
