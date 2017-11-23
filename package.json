@@ -9,7 +9,7 @@
     "build-watch": "npm run build && npm-run-all -p watch start-dev",
     "build": "npm run security-check && npm run build-ts && npm run lint-ts",
     "build-ts": "tsc",
-    "lint-ts": "tslint -c tslint.json -p tsconfig.lint.json -t stylish --force",
+    "lint-ts": "tslint -c tslint.json -p tsconfig.lint.json -t stylish --force -e \"**/@types/**\"",
     "watch": "tsc -w",
     "security-check": "nsp check",
     "test": "jest",
@@ -20,7 +20,8 @@
     "compression": "^1.7.1",
     "debug": "^3.1.0",
     "express": "~4.15.5",
-    "helmet": "^3.9.0"
+    "helmet": "^3.9.0",
+    "themeparks": "^4.6.3"
   },
   "devDependencies": {
     "@types/compression": "^0.0.35",
