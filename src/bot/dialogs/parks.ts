@@ -1,10 +1,10 @@
 import {
   IDialogResult,
   IPromptChoiceResult,
+  IPromptConfirmResult,
   Library,
   ListStyle,
-  Prompts,
-  IPromptConfirmResult
+  Prompts
 } from "botbuilder";
 import { parkNames } from "../../services/parks";
 import strings from "../../strings";
@@ -32,6 +32,8 @@ lib.dialog("whichPark", [
 
 lib.dialog("stillInterestedInPark", [
   (session, args: IStillInterestedInParkArgs) => {
+    session.dialogData.currentParkName = args.parkName;
+
     const prompt = `${strings.parks.stillInterestedInPark
       .prompt1}${args.parkName}${strings.parks.stillInterestedInPark.prompt2}`;
 
@@ -39,8 +41,15 @@ lib.dialog("stillInterestedInPark", [
   },
 
   (session, results: IPromptConfirmResult) => {
-    // TODO If Yes return theme park name
-    // TODO if no launch the which park.
+    if (results.response) {
+      const dialogResult: IDialogResult<string> = {
+        response: session.dialogData.currentParkName
+      };
+
+      session.endDialogWithResult(dialogResult);
+    } else {
+      session.replaceDialog("parks:whichPark");
+    }
   }
 ]);
 

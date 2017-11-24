@@ -23,7 +23,7 @@ export default {
     },
     stillInterestedInPark: {
       prompt1: "Are you still interested in ",
-      prompt2: " ?"
+      prompt2: "?"
     },
     whichPark: {
       prompt: "Which park are you interested in?",
