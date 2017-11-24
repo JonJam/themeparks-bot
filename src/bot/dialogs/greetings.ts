@@ -1,18 +1,21 @@
 import { Library, Session } from "botbuilder";
 import strings from "../../strings";
+import {
+  getShownWelcomeNewUserMessage,
+  setShownWelcomeNewUserMessage
+} from "../data/userData";
 
 const lib = new Library("greetings");
 
 lib.dialog("hello", (session: Session) => {
-  const shownWelcomeNewUserMessage: boolean | undefined =
-    session.userData.shownWelcomeNewUserMessage;
+  const shownWelcomeNewUserMessage = getShownWelcomeNewUserMessage(session);
 
   let message = strings.greetings.hello.welcomeBack;
 
   if (shownWelcomeNewUserMessage === undefined) {
     message = strings.greetings.hello.welcomeNew;
 
-    session.userData.shownWelcomeNewUserMessage = true;
+    setShownWelcomeNewUserMessage(session, true);
   }
 
   session.endDialog(message);

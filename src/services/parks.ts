@@ -28,3 +28,10 @@ export const parkNames: ReadonlyArray<string> = names.sort((a, b) => {
 
   return 0;
 });
+
+export async function getOpenAndCloseTimes(parkName: string) {
+  const openingTimes = await parksMap.get(parkName).GetOpeningTimesPromise();
+
+  // TODO Implement this.
+  openingTimes.forEach(schedule => console.log(schedule));
+}
