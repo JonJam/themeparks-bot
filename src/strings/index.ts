@@ -1,5 +1,4 @@
 export default {
-  default: {},
   greetings: {
     goodbye: {
       message: "Bye."
