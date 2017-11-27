@@ -1,14 +1,17 @@
 import {
+  EntityRecognizer,
   IDialogResult,
   IPromptChoiceResult,
   IPromptConfirmResult,
   Library,
   ListStyle,
-  Prompts
+  Prompts,
+  IEntity
 } from "botbuilder";
 import { parkNames, getOpenAndCloseTimes } from "../../services/parks";
 import strings from "../../strings";
 import { getSelectedPark } from "../data/userData";
+import moment = require("moment");
 
 const lib = new Library("parks");
 
@@ -65,14 +68,27 @@ lib.dialog("parkIntro", [
 ]);
 
 lib
-  .dialog("parks:openAndCloseTimes", async session => {
+  .dialog("parks:openAndCloseTimes", async (session, args) => {
     session.sendTyping();
+
+    const intent = args.intent;
+    const dateEntity: IEntity | null = EntityRecognizer.findEntity(
+      intent.entities,
+      "builtin.datetimeV2.date"
+    );
+
+    let date = moment();
+
+    if (dateEntity !== null) {
+      // Getting parsed date value from utterance.
+      date = moment((dateEntity as any).resolution.values[0].value);
+    }
 
     const park = getSelectedPark(session);
 
-    await getOpenAndCloseTimes(park);
+    const schedule = await getOpenAndCloseTimes(park, date);
 
-    session.endDialog("Hi");
+    session.endDialog(JSON.stringify(schedule));
   })
   .triggerAction({
     // LUIS intent
