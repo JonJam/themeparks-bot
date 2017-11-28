@@ -77,7 +77,7 @@ lib
       "builtin.datetimeV2.date"
     );
 
-    let date = moment();
+    let date = moment().startOf("day");
 
     if (dateEntity !== null) {
       // Getting parsed date value from utterance.
@@ -88,6 +88,9 @@ lib
 
     const schedule = await getOpenAndCloseTimes(park, date);
 
+    // TODO Check if schedule is null
+
+    // TODO Handle response
     session.endDialog(JSON.stringify(schedule));
   })
   .triggerAction({

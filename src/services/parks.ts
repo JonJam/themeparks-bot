@@ -1,5 +1,5 @@
 import themeparks = require("themeparks");
-import { Moment } from "moment";
+import moment = require("moment");
 
 // Map of theme park name to class.
 const parksMap = new Map(
@@ -30,16 +30,19 @@ export const parkNames: ReadonlyArray<string> = names.sort((a, b) => {
   return 0;
 });
 
-export async function getOpenAndCloseTimes(parkName: string, date: Moment) {
+export async function getOpenAndCloseTimes(
+  parkName: string,
+  date: moment.Moment
+) {
   const openingTimes = await parksMap.get(parkName).GetOpeningTimesPromise();
 
-  // TODO Fix this comparison as schedule.date coming back as strings not moments
-  // TODO WORKING HERE
   const filteredSchedules = openingTimes.filter(schedule => {
-    return schedule.date === date;
+    return moment(schedule.date).isSame(date);
   });
 
   if (filteredSchedules.length > 0) {
+    // TODO unpack result
+
     return filteredSchedules[0];
   } else {
     return null;
