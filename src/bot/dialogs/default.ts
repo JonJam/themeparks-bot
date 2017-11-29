@@ -17,7 +17,10 @@ export default [
     }
   },
   (session: Session, results: IDialogResult<string>) => {
-    setSelectedPark(session, results.response);
+    // Removing undefined as we know that if reach here then a park has been selected.
+    const park = results.response as string;
+
+    setSelectedPark(session, park);
 
     session.beginDialog("parks:parkIntro");
   }
