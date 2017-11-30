@@ -1,13 +1,19 @@
 import {
+  EntityRecognizer,
   IDialogResult,
+  IEntity,
+  IFindMatchResult,
   IPromptChoiceResult,
   IPromptConfirmResult,
   Library,
   ListStyle,
   Prompts
 } from "botbuilder";
-import { parkNames } from "../../services/parks";
+import moment = require("moment-timezone");
+import { format } from "util";
+import { getOperatingHours, parkNames } from "../../services/parks";
 import strings from "../../strings";
+import { getSelectedPark } from "../data/userData";
 
 const lib = new Library("parks");
 
@@ -20,7 +26,9 @@ lib.dialog("whichPark", [
   },
 
   (session, results: IPromptChoiceResult) => {
-    const chosenPark = results.response.entity;
+    // Casting to remove undefined as choice prompt will ensure value.
+    const response = results.response as IFindMatchResult;
+    const chosenPark = response.entity;
 
     const dialogResult: IDialogResult<string> = {
       response: chosenPark
@@ -31,11 +39,10 @@ lib.dialog("whichPark", [
 ]);
 
 lib.dialog("stillInterestedInPark", [
-  (session, args: IStillInterestedInParkArgs) => {
-    session.dialogData.currentParkName = args.parkName;
+  session => {
+    const parkName = getSelectedPark(session);
 
-    const prompt = `${strings.parks.stillInterestedInPark
-      .prompt1}${args.parkName}${strings.parks.stillInterestedInPark.prompt2}`;
+    const prompt = format(strings.parks.stillInterestedInPark.prompt, parkName);
 
     Prompts.confirm(session, prompt);
   },
@@ -43,7 +50,7 @@ lib.dialog("stillInterestedInPark", [
   (session, results: IPromptConfirmResult) => {
     if (results.response) {
       const dialogResult: IDialogResult<string> = {
-        response: session.dialogData.currentParkName
+        response: getSelectedPark(session)
       };
 
       session.endDialogWithResult(dialogResult);
@@ -54,19 +61,73 @@ lib.dialog("stillInterestedInPark", [
 ]);
 
 lib.dialog("parkIntro", [
-  (session, args: IParkIntroArgs) => {
-    session.send(strings.parks.parkIntro.message1 + args.parkName);
+  session => {
+    const parkName = getSelectedPark(session);
+
+    session.send(strings.parks.parkIntro.message1 + parkName);
 
     session.endDialog(strings.parks.parkIntro.message2);
   }
 ]);
 
+lib
+  .dialog("parks:operatingHours", async (session, args) => {
+    session.sendTyping();
+
+    const intent = args.intent;
+    const dateEntity: IEntity | null = EntityRecognizer.findEntity(
+      intent.entities,
+      "builtin.datetimeV2.date"
+    );
+
+    let date = moment().startOf("day");
+
+    if (dateEntity !== null) {
+      // Getting parsed date value from utterance.
+      date = moment((dateEntity as any).resolution.values[0].value);
+    }
+
+    // Casting as string to remove undefined since at this point it will be set.
+    const park = getSelectedPark(session) as string;
+
+    const operatingHours = await getOperatingHours(park, date);
+
+    let message = "";
+    if (operatingHours === null) {
+      message = strings.parks.operatingHours.noData;
+    } else if (!operatingHours.isOpen) {
+      message = strings.parks.operatingHours.closed;
+    } else {
+      message = format(
+        strings.parks.operatingHours.operatingHoursMessage,
+        park,
+        operatingHours.opening.format("LT z"),
+        operatingHours.closing.format("LT z"),
+        operatingHours.date.format("L")
+      );
+
+      if (operatingHours.additionalHours !== undefined) {
+        message += strings.parks.operatingHours.additionalHoursMessage;
+
+        operatingHours.additionalHours.forEach(a => {
+          message += `**${a.description}**\n`;
+          message += format(
+            strings.parks.operatingHours.startsAt,
+            a.opening.format("LT z")
+          );
+          message += format(
+            strings.parks.operatingHours.endsAt,
+            a.closing.format("LT z")
+          );
+        });
+      }
+    }
+
+    session.endDialog(message);
+  })
+  .triggerAction({
+    // LUIS intent
+    matches: "parks:operatingHours"
+  });
+
 export default lib;
-
-export interface IParkIntroArgs {
-  parkName: string;
-}
-
-export interface IStillInterestedInParkArgs {
-  parkName: string;
-}
