@@ -1,14 +1,14 @@
-import moment = require("moment");
+import moment = require("moment-timezone");
 
-export interface IParkHours {
+export interface IParkOperatingHours {
   date: moment.Moment;
   opening: moment.Moment;
   closing: moment.Moment;
   isOpen: boolean;
-  additionalHours?: IAdditionalParkHours[];
+  additionalHours?: IAdditionalParkOperatingHours[];
 }
 
-interface IAdditionalParkHours {
+interface IAdditionalParkOperatingHours {
   opening: moment.Moment;
   closing: moment.Moment;
   description: string;

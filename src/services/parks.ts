@@ -1,6 +1,6 @@
+import moment = require("moment-timezone");
 import { AllParks, Park } from "themeparks";
-import moment = require("moment");
-import { IParkHours } from "../models";
+import { IParkOperatingHours } from "../models";
 
 // Map of theme park name to class.
 const parksMap = new Map<string, Park>(
@@ -31,10 +31,10 @@ export const parkNames: ReadonlyArray<string> = names.sort((a, b) => {
   return 0;
 });
 
-export async function getOpenAndCloseTimes(
+export async function getOperatingHours(
   parkName: string,
   date: moment.Moment
-): Promise<IParkHours | null> {
+): Promise<IParkOperatingHours | null> {
   const park = parksMap.get(parkName) as Park;
 
   const openingTimes = await park.GetOpeningTimesPromise();
@@ -46,24 +46,24 @@ export async function getOpenAndCloseTimes(
   if (filteredSchedules.length > 0) {
     const schedule = filteredSchedules[0];
 
-    let additionalHours = undefined;
+    let additionalHours;
 
     if (schedule.special !== undefined) {
       additionalHours = schedule.special.map(s => {
         return {
-          opening: moment(s.openingTime),
-          closing: moment(s.closingTime),
-          description: s.type
+          closing: moment.tz(s.closingTime, park.Timezone),
+          description: s.type,
+          opening: moment.tz(s.openingTime, park.Timezone)
         };
       });
     }
 
     return {
-      date: moment(schedule.date),
-      opening: moment(schedule.openingTime),
-      closing: moment(schedule.closingTime),
+      additionalHours,
+      closing: moment.tz(schedule.closingTime, park.Timezone),
+      date,
       isOpen: schedule.type === "Operating",
-      additionalHours
+      opening: moment.tz(schedule.openingTime, park.Timezone)
     };
   } else {
     return null;

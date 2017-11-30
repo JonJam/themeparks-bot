@@ -16,13 +16,20 @@ export default {
     }
   },
   parks: {
+    operatingHours: {
+      additionalHoursMessage: " There are also additional events:\n\n",
+      closed: "It is currently closed.",
+      endsAt: "* Ends at: %s\n",
+      noData: "Sorry I was unable to find out the operating hours.",
+      operatingHoursMessage: "%s opens at %s and closes at %s on %s.",
+      startsAt: "* Starts at: %s\n"
+    },
     parkIntro: {
       message1: "You selected: ",
       message2: "Try asking questions about rides and operating hours."
     },
     stillInterestedInPark: {
-      prompt1: "Are you still interested in ",
-      prompt2: "?"
+      prompt: "Are you still interested in %s?"
     },
     whichPark: {
       prompt: "Which park are you interested in?",
