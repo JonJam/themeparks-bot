@@ -11,7 +11,11 @@ import {
 } from "botbuilder";
 import moment = require("moment-timezone");
 import { format } from "util";
-import { getOperatingHours, parkNames } from "../../services/parks";
+import {
+  getOperatingHours,
+  getWaitTimes,
+  parkNames
+} from "../../services/parks";
 import strings from "../../strings";
 import { getSelectedPark } from "../data/userData";
 
@@ -71,7 +75,7 @@ lib.dialog("parkIntro", [
 ]);
 
 lib
-  .dialog("parks:operatingHours", async (session, args) => {
+  .dialog("operatingHours", async (session, args) => {
     session.sendTyping();
 
     const intent = args.intent;
@@ -129,6 +133,38 @@ lib
   .triggerAction({
     // LUIS intent
     matches: "parks:operatingHours"
+  });
+
+lib
+  .dialog("waittimes", async session => {
+    session.sendTyping();
+
+    // Casting as string to remove undefined since at this point it will be set.
+    const park = getSelectedPark(session) as string;
+
+    const waitTimes = await getWaitTimes(park);
+
+    let message = "";
+
+    if (waitTimes === null) {
+      message = strings.parks.waitTimes.noData;
+    } else {
+      // TODO Move to strings
+      message = "The current wait times are:\n\n";
+
+      waitTimes.forEach(w => {
+        // TODO Move to strings
+        message += `* ${w.name} - ${w.isRunning
+          ? w.waitTime + " minutes"
+          : "Closed"}\n\n`;
+      });
+    }
+
+    session.endDialog(message);
+  })
+  .triggerAction({
+    // LUIS intent
+    matches: "parks:waitTimes"
   });
 
 export default lib;

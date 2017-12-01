@@ -13,3 +13,9 @@ export interface IParkOperatingHours {
   isOpen: boolean;
   additionalHours?: IAdditionalParkOperatingHours[];
 }
+
+export interface IRideWaitTime {
+  name: string;
+  waitTime: number;
+  isRunning: boolean;
+}

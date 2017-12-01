@@ -32,6 +32,9 @@ export default {
     stillInterestedInPark: {
       prompt: "Are you still interested in %s?"
     },
+    waitTimes: {
+      noData: "Sorry I was unable to find out the wait times."
+    },
     whichPark: {
       prompt: "Which park are you interested in?",
       retryPrompt:
