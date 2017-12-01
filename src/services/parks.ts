@@ -46,6 +46,9 @@ export async function getOperatingHours(
   if (filteredSchedules.length > 0) {
     const schedule = filteredSchedules[0];
 
+    const opening = moment.tz(schedule.openingTime, park.Timezone);
+    const closing = moment.tz(schedule.closingTime, park.Timezone);
+
     let additionalHours;
 
     if (schedule.special !== undefined) {
@@ -58,12 +61,32 @@ export async function getOperatingHours(
       });
     }
 
+    let isOpen = false;
+
+    if (schedule.type === "Operating") {
+      const currentTimeInTimeZone = moment().tz(park.Timezone);
+
+      isOpen = currentTimeInTimeZone.isBetween(opening, closing);
+
+      if (
+        !isOpen &&
+        additionalHours &&
+        additionalHours.find(a =>
+          currentTimeInTimeZone.isBetween(a.opening, a.closing)
+        )
+      ) {
+        // Current time is outside the normal park operating hours, if there are additional hours then
+        // try find one for current time. If there is, then it is open.
+        isOpen = true;
+      }
+    }
+
     return {
       additionalHours,
-      closing: moment.tz(schedule.closingTime, park.Timezone),
+      closing,
       date,
-      isOpen: schedule.type === "Operating",
-      opening: moment.tz(schedule.openingTime, park.Timezone)
+      isOpen,
+      opening
     };
   } else {
     return null;

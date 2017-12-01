@@ -95,12 +95,13 @@ lib
     let message = "";
     if (operatingHours === null) {
       message = strings.parks.operatingHours.noData;
-    } else if (!operatingHours.isOpen) {
-      message = strings.parks.operatingHours.closed;
     } else {
       message = format(
         strings.parks.operatingHours.operatingHoursMessage,
         park,
+        operatingHours.isOpen
+          ? strings.parks.operatingHours.open
+          : strings.parks.operatingHours.closed,
         operatingHours.opening.format("LT z"),
         operatingHours.closing.format("LT z"),
         operatingHours.date.format("L")

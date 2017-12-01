@@ -18,10 +18,11 @@ export default {
   parks: {
     operatingHours: {
       additionalHoursMessage: " There are also additional events:\n\n",
-      closed: "It is currently closed.",
+      closed: "closed",
       endsAt: "* Ends at: %s\n",
       noData: "Sorry I was unable to find out the operating hours.",
-      operatingHoursMessage: "%s opens at %s and closes at %s on %s.",
+      open: "open",
+      operatingHoursMessage: "%s is %s. It opens at %s and closes at %s on %s.",
       startsAt: "* Starts at: %s\n"
     },
     parkIntro: {
