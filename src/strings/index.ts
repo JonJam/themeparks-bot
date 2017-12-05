@@ -15,8 +15,8 @@ export default {
       ]
     }
   },
-  parks: {
-    operatingHours: {
+  operatingHours: {
+    park: {
       additionalHoursMessage: " There are also additional events:\n\n",
       closed: "closed",
       endsAt: "* Ends at: %s\n",
@@ -24,7 +24,9 @@ export default {
       open: "open",
       operatingHoursMessage: "%s is %s. It opens at %s and closes at %s on %s.",
       startsAt: "* Starts at: %s\n"
-    },
+    }
+  },
+  parks: {
     parkIntro: {
       message1: "You selected: ",
       message2: "Try asking questions about rides and operating hours."
@@ -32,17 +34,24 @@ export default {
     stillInterestedInPark: {
       prompt: "Are you still interested in %s?"
     },
-    waitTimes: {
-      closed: "Closed",
-      message: "The current wait times are:\n\n",
-      noData: "Sorry I was unable to find out the wait times.",
-      time: "%s minutes",
-      waitTime: "* %s - %s\n\n"
-    },
     whichPark: {
       prompt: "Which park are you interested in?",
       retryPrompt:
         "Sorry I didn’t understand. Please choose an option from the list by either entering the number or park name."
     }
+  },
+  waitTimes: {
+    all: {
+      message: "The current wait times are:\n\n",
+      noData: "Sorry I was unable to find out the wait times."
+    },
+    closed: "Closed",
+    shortest: {
+      allRidesClosed: "Currently all rides are closed.",
+      message: "The shortest wait time is: %s",
+      noData: "Sorry I was unable to find out the wait times."
+    },
+    time: "%s minutes",
+    waitTime: "%s - %s\n\n"
   }
 };
