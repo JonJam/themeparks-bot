@@ -29,10 +29,9 @@ lib
 
     const operatingHours = await getOperatingHours(park, date);
 
-    let message = "";
-    if (operatingHours === null) {
-      message = strings.operatingHours.park.noData;
-    } else {
+    let message = strings.operatingHours.park.noData;
+
+    if (operatingHours !== null) {
       message = format(
         strings.operatingHours.park.operatingHoursMessage,
         park,
