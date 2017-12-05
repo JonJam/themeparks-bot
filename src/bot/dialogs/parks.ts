@@ -144,19 +144,16 @@ lib
 
     const waitTimes = await getWaitTimes(park);
 
-    let message = "";
+    let message = strings.parks.waitTimes.noData;
 
-    if (waitTimes === null) {
-      message = strings.parks.waitTimes.noData;
-    } else {
-      // TODO Move to strings
-      message = "The current wait times are:\n\n";
+    if (waitTimes !== null) {
+      message = strings.parks.waitTimes.message;
 
       waitTimes.forEach(w => {
-        // TODO Move to strings
-        message += `* ${w.name} - ${w.isRunning
-          ? w.waitTime + " minutes"
-          : "Closed"}\n\n`;
+        const status = w.isRunning
+          ? format(strings.parks.waitTimes.time, w.waitTime)
+          : strings.parks.waitTimes.closed;
+        message += format(strings.parks.waitTimes.waitTime, w.name, status);
       });
     }
 

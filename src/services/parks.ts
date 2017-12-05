@@ -117,9 +117,9 @@ export async function getWaitTimes(
     if (times !== null) {
       waitTimes = times.map(w => {
         return {
+          isRunning: w.active,
           name: w.name,
-          waitTime: w.waitTime,
-          isRunning: w.active
+          waitTime: w.waitTime
         };
       });
 
