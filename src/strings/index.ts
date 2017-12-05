@@ -42,14 +42,16 @@ export default {
   },
   waitTimes: {
     all: {
-      message: "The current wait times are:\n\n",
-      noData: "Sorry I was unable to find out the wait times."
+      message: "The current wait times are:\n\n"
     },
+    allRidesClosed: "Currently all rides are closed.",
     closed: "Closed",
+    longest: {
+      message: "The longest wait time is: %s"
+    },
+    noData: "Sorry I was unable to find out the wait times.",
     shortest: {
-      allRidesClosed: "Currently all rides are closed.",
-      message: "The shortest wait time is: %s",
-      noData: "Sorry I was unable to find out the wait times."
+      message: "The shortest wait time is: %s"
     },
     time: "%s minutes",
     waitTime: "%s - %s\n\n"
