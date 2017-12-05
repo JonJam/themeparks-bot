@@ -32,6 +32,13 @@ export default {
     stillInterestedInPark: {
       prompt: "Are you still interested in %s?"
     },
+    waitTimes: {
+      closed: "Closed",
+      message: "The current wait times are:\n\n",
+      noData: "Sorry I was unable to find out the wait times.",
+      time: "%s minutes",
+      waitTime: "* %s - %s\n\n"
+    },
     whichPark: {
       prompt: "Which park are you interested in?",
       retryPrompt:

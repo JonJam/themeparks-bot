@@ -1,6 +1,9 @@
+import debug = require("debug");
 import moment = require("moment-timezone");
-import { AllParks, Park } from "themeparks";
-import { IParkOperatingHours } from "../models";
+import { AllParks, Park, ScheduleData } from "themeparks";
+import { IParkOperatingHours, IRideWaitTime } from "../models";
+
+const log = debug("services:parks");
 
 // Map of theme park name to class.
 const parksMap = new Map<string, Park>(
@@ -19,7 +22,7 @@ for (const key of parksMap.keys()) {
   names.push(key);
 }
 
-export const parkNames: ReadonlyArray<string> = names.sort((a, b) => {
+function stringSort(a: string, b: string) {
   if (a < b) {
     return -1;
   }
@@ -29,7 +32,9 @@ export const parkNames: ReadonlyArray<string> = names.sort((a, b) => {
   }
 
   return 0;
-});
+}
+
+export const parkNames: ReadonlyArray<string> = names.sort(stringSort);
 
 export async function getOperatingHours(
   parkName: string,
@@ -37,13 +42,19 @@ export async function getOperatingHours(
 ): Promise<IParkOperatingHours | null> {
   const park = parksMap.get(parkName) as Park;
 
-  const openingTimes = await park.GetOpeningTimesPromise();
+  let filteredSchedules: ScheduleData[] | null = null;
 
-  const filteredSchedules = openingTimes.filter(schedule => {
-    return moment(schedule.date).isSame(date);
-  });
+  try {
+    const openingTimes = await park.GetOpeningTimesPromise();
 
-  if (filteredSchedules.length > 0) {
+    filteredSchedules = openingTimes.filter(schedule => {
+      return moment(schedule.date).isSame(date);
+    });
+  } catch (e) {
+    log(e);
+  }
+
+  if (filteredSchedules !== null && filteredSchedules.length > 0) {
     const schedule = filteredSchedules[0];
 
     const opening = moment.tz(schedule.openingTime, park.Timezone);
@@ -91,4 +102,32 @@ export async function getOperatingHours(
   } else {
     return null;
   }
+}
+
+export async function getWaitTimes(
+  parkName: string
+): Promise<IRideWaitTime[] | null> {
+  const park = parksMap.get(parkName) as Park;
+
+  let waitTimes: IRideWaitTime[] | null = null;
+
+  try {
+    const times = await park.GetWaitTimesPromise();
+
+    if (times !== null) {
+      waitTimes = times.map(w => {
+        return {
+          isRunning: w.active,
+          name: w.name,
+          waitTime: w.waitTime
+        };
+      });
+
+      waitTimes = waitTimes.sort((a, b) => stringSort(a.name, b.name));
+    }
+  } catch (e) {
+    log(e);
+  }
+
+  return waitTimes;
 }
