@@ -1,9 +1,10 @@
-import { Library, Session } from "botbuilder";
+import { EntityRecognizer, IEntity, Library, Session } from "botbuilder";
 import { format } from "util";
 import { IRideWaitTime } from "../../models";
 import { getWaitTimes } from "../../services/parks";
 import strings from "../../strings";
 import { getSelectedPark } from "../data/userData";
+import { getClosestMatch } from "../../utils";
 
 async function dialog(
   session: Session,
@@ -118,6 +119,46 @@ lib
   .triggerAction({
     // LUIS intent
     matches: "waitTimes:longest"
+  });
+
+lib
+  .dialog("ride", [
+    async (session, args) => {
+      session.sendTyping();
+
+      const intent = args.intent;
+      const rideNameEntity: IEntity = EntityRecognizer.findEntity(
+        intent.entities,
+        "rideName"
+      );
+      const inputRideName = rideNameEntity.entity;
+
+      // // Casting as string to remove undefined since at this point it will be set.
+      const park = getSelectedPark(session) as string;
+
+      const waitTimes = await getWaitTimes(park);
+
+      let message = strings.waitTimes.noData;
+
+      if (waitTimes !== null) {
+        // message = createMessage(waitTimes);
+        const rideNames = waitTimes.map(wt => wt.name);
+        const closestMatch = getClosestMatch(inputRideName, rideNames);
+
+        // TODO Confirm closestMatch is what user meant
+
+        message = closestMatch;
+      }
+
+      // TODO end dialog if wait times is null
+    },
+    session => {
+      session.endDialog("End");
+    }
+  ])
+  .triggerAction({
+    // LUIS intent
+    matches: "waitTimes:ride"
   });
 
 export default lib;
