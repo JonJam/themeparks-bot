@@ -134,7 +134,7 @@ lib
 // TODO See if can simplify this
 lib
   .dialog("ride", [
-    async (session, args) => {
+    async (session, args, next) => {
       session.sendTyping();
 
       const intent = args.intent;
@@ -154,45 +154,32 @@ lib
         session.dialogData.waitTimes = waitTimes;
 
         const rideNames = waitTimes.map(wt => wt.name);
-        session.dialogData.rideNames = rideNames;
 
-        // TODO This needs improving
+        // TODO Test this below
         const closestMatch = getClosestMatch(inputRideName, rideNames);
-        session.dialogData.closestMatch = closestMatch;
 
-        const prompt = format(
-          strings.waitTimes.ride.confirmMatchPrompt,
-          closestMatch
-        );
+        if (closestMatch !== null) {
+          // We have got the correct ride, so go to the next step.
+          const dialogResult: IDialogResult<string> = {
+            response: session.dialogData.closestMatch
+          };
 
-        Prompts.confirm(session, prompt);
+          // Removing undefined as we do have a next step.
+          next!(dialogResult);
+        } else {
+          Prompts.choice(
+            session,
+            strings.waitTimes.ride.whichRidePrompt,
+            rideNames,
+            {
+              listStyle: ListStyle.auto,
+              retryPrompt: strings.waitTimes.ride.whichRidePromptRetry
+            }
+          );
+        }
       } else {
         // TODO TRy and move this to the end.
         session.endDialog(strings.waitTimes.common.noData);
-      }
-    },
-    (session, result: IPromptConfirmResult, next) => {
-      if (result.response === true) {
-        // We have got the correct ride, so go to the next step.
-        const dialogResult: IDialogResult<string> = {
-          response: session.dialogData.closestMatch
-        };
-
-        // Removing undefined as we do have a next step.
-        next!(dialogResult);
-      } else {
-        // We don't have the correct ride, so present choice.
-        const rideNames: string[] = session.dialogData.rideNames;
-
-        Prompts.choice(
-          session,
-          strings.waitTimes.ride.whichRidePrompt,
-          rideNames,
-          {
-            listStyle: ListStyle.auto,
-            retryPrompt: strings.waitTimes.ride.whichRidePromptRetry
-          }
-        );
       }
     },
     (session, result: IPromptChoiceResult | IDialogResult<string>) => {

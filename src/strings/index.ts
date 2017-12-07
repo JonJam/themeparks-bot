@@ -58,7 +58,6 @@ export default {
       message: "The shortest wait time is: %s"
     },
     ride: {
-      confirmMatchPrompt: "Did you mean %s?",
       whichRidePrompt: "Which ride are you interested in?",
       whichRidePromptRetry:
         "Sorry I didn’t understand. Please choose an option from the list by either entering the number or ride name."

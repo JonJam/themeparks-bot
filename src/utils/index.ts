@@ -1,17 +1,23 @@
-import { get } from "fast-levenshtein";
+import * as Fuse from "fuse.js";
 
-export function getClosestMatch(input: string, options: ReadonlyArray<string>) {
-  let highestOptionValue = options[0];
-  let highestOptionScore = get(highestOptionValue, input);
+const fuseOptions: Fuse.FuseOptions = {
+  shouldSort: true,
+  threshold: 0.5,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32
+};
 
-  options.forEach(o => {
-    const score = get(o, input);
+export function getClosestMatch(input: string, options: string[]) {
+  const searchEngine = new Fuse(options, fuseOptions);
 
-    if (score < highestOptionScore) {
-      highestOptionValue = o;
-      highestOptionScore = score;
-    }
-  });
+  const results = searchEngine.search<number>(input);
 
-  return highestOptionValue;
+  let match: string | null = null;
+
+  if (results.length > 0) {
+    match = options[results[0]];
+  }
+
+  return match;
 }
