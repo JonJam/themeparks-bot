@@ -24,8 +24,8 @@ lib
       date = moment((dateEntity as any).resolution.values[0].value);
     }
 
-    // Casting as string to remove undefined since at this point it will be set.
-    const park = getSelectedPark(session) as string;
+    // Removing undefined since at this point it will be set.
+    const park = getSelectedPark(session)!;
 
     const operatingHours = await getOperatingHours(park, date);
 
