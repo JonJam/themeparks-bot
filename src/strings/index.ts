@@ -56,10 +56,12 @@ export default {
     },
     shortest: {
       message: "The shortest wait time is: %s"
-    },
-    ride: {
-      whichRidePrompt: "Which ride are you interested in?",
-      whichRidePromptRetry:
+    }
+  },
+  rides: {
+    whichRide: {
+      prompt: "Sorry I didn't understand. Which ride are you interested in?",
+      retryPrompt:
         "Sorry I didn’t understand. Please choose an option from the list by either entering the number or ride name."
     }
   }

@@ -1,13 +1,9 @@
 import {
   EntityRecognizer,
   IEntity,
-  IPromptConfirmResult,
   Library,
-  Prompts,
   Session,
-  IDialogResult,
-  ListStyle,
-  IPromptChoiceResult
+  IDialogResult
 } from "botbuilder";
 import { format } from "util";
 import { IRideWaitTime } from "../../models";
@@ -15,6 +11,7 @@ import { getWaitTimes } from "../../services/parks";
 import strings from "../../strings";
 import { getSelectedPark } from "../data/userData";
 import { getClosestMatch } from "../../utils";
+import { IWhichRideArgs } from "src/bot/dialogs/rides";
 
 async function dialog(
   session: Session,
@@ -131,19 +128,10 @@ lib
     matches: "waitTimes:longest"
   });
 
-// TODO See if can simplify this
 lib
   .dialog("ride", [
     async (session, args, next) => {
       session.sendTyping();
-
-      const intent = args.intent;
-      const rideNameEntity: IEntity = EntityRecognizer.findEntity(
-        intent.entities,
-        "rideName"
-      );
-
-      const inputRideName = rideNameEntity.entity;
 
       // Removing undefined since at this point it will be set.
       const park = getSelectedPark(session)!;
@@ -151,51 +139,43 @@ lib
       const waitTimes = await getWaitTimes(park);
 
       if (waitTimes !== null) {
+        const rideNames = waitTimes.map(wt => wt.name);
         session.dialogData.waitTimes = waitTimes;
 
-        const rideNames = waitTimes.map(wt => wt.name);
+        const intentEntities = args.intent.entities;
 
-        // TODO Test this below
-        const closestMatch = getClosestMatch(inputRideName, rideNames);
+        let rideName: string | null = null;
 
-        if (closestMatch !== null) {
-          // We have got the correct ride, so go to the next step.
+        if (intentEntities > 0) {
+          // LUIS found a ride name.
+          const rideNameEntity: IEntity = EntityRecognizer.findEntity(
+            intentEntities,
+            "rideName"
+          );
+
+          rideName = getClosestMatch(rideNameEntity.entity, rideNames);
+        }
+
+        if (rideName !== null) {
           const dialogResult: IDialogResult<string> = {
-            response: session.dialogData.closestMatch
+            response: rideName
           };
 
           // Removing undefined as we do have a next step.
           next!(dialogResult);
         } else {
-          Prompts.choice(
-            session,
-            strings.waitTimes.ride.whichRidePrompt,
-            rideNames,
-            {
-              listStyle: ListStyle.auto,
-              retryPrompt: strings.waitTimes.ride.whichRidePromptRetry
-            }
-          );
+          const args: IWhichRideArgs = {
+            rideNames
+          };
+
+          session.beginDialog("rides:whichPark", args);
         }
       } else {
-        // TODO TRy and move this to the end.
         session.endDialog(strings.waitTimes.common.noData);
       }
     },
-    (session, result: IPromptChoiceResult | IDialogResult<string>) => {
-      let parkName = "";
-
-      if (typeof result.response === "string") {
-        const dialogResult = result as IDialogResult<string>;
-
-        // Removing undefined as we do have a value.
-        parkName = dialogResult.response!;
-      } else {
-        const promptChoiceResult = result as IPromptChoiceResult;
-
-        // Removing undefined as we do have a value.
-        parkName = promptChoiceResult.response!.entity;
-      }
+    (session, result: IDialogResult<string>) => {
+      const parkName = result.response;
 
       const waitTimes: IRideWaitTime[] = session.dialogData.waitTimes;
 
