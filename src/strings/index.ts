@@ -40,20 +40,29 @@ export default {
         "Sorry I didn’t understand. Please choose an option from the list by either entering the number or park name."
     }
   },
+  rides: {
+    whichRide: {
+      prompt: "Sorry I didn't understand. Which ride are you interested in?",
+      retryPrompt:
+        "Sorry I didn’t understand. Please choose an option from the list by either entering the number or ride name."
+    }
+  },
   waitTimes: {
     all: {
       message: "The current wait times are:\n\n"
     },
-    allRidesClosed: "Currently all rides are closed.",
-    closed: "Closed",
+    common: {
+      allRidesClosed: "Currently all rides are closed.",
+      closed: "Closed",
+      noData: "Sorry I was unable to find out the wait times.",
+      time: "%s minutes",
+      waitTime: "%s - %s\n\n"
+    },
     longest: {
       message: "The longest wait time is: %s"
     },
-    noData: "Sorry I was unable to find out the wait times.",
     shortest: {
       message: "The shortest wait time is: %s"
-    },
-    time: "%s minutes",
-    waitTime: "%s - %s\n\n"
+    }
   }
 };

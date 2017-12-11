@@ -1,6 +1,5 @@
 import {
   IDialogResult,
-  IFindMatchResult,
   IPromptChoiceResult,
   IPromptConfirmResult,
   Library,
@@ -22,10 +21,9 @@ lib.dialog("whichPark", [
     });
   },
 
-  (session, results: IPromptChoiceResult) => {
-    // Casting to remove undefined as choice prompt will ensure value.
-    const response = results.response as IFindMatchResult;
-    const chosenPark = response.entity;
+  (session, result: IPromptChoiceResult) => {
+    // Removing undefined as choice prompt will ensure value.
+    const chosenPark = result.response!.entity;
 
     const dialogResult: IDialogResult<string> = {
       response: chosenPark
@@ -44,8 +42,8 @@ lib.dialog("stillInterestedInPark", [
     Prompts.confirm(session, prompt);
   },
 
-  (session, results: IPromptConfirmResult) => {
-    if (results.response) {
+  (session, result: IPromptConfirmResult) => {
+    if (result.response === true) {
       const dialogResult: IDialogResult<string> = {
         response: getSelectedPark(session)
       };

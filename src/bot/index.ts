@@ -9,6 +9,7 @@ import defaultDialog from "./dialogs/default";
 import greetings from "./dialogs/greetings";
 import operatingHours from "./dialogs/operatingHours";
 import parks from "./dialogs/parks";
+import rides from "./dialogs/rides";
 import waitTimes from "./dialogs/waitTimes";
 
 // Create chat connector for communicating with the Bot Framework Service
@@ -22,6 +23,7 @@ bot.recognizer(new LuisRecognizer(luisAppUrl));
 bot.library(greetings.clone());
 bot.library(operatingHours.clone());
 bot.library(parks.clone());
+bot.library(rides.clone());
 bot.library(waitTimes.clone());
 
 // This may not be supported by all channcels, see alternative: https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-handle-conversation-events

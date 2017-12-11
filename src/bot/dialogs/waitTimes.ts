@@ -1,9 +1,17 @@
-import { Library, Session } from "botbuilder";
+import {
+  EntityRecognizer,
+  IDialogResult,
+  IEntity,
+  Library,
+  Session
+} from "botbuilder";
 import { format } from "util";
 import { IRideWaitTime } from "../../models";
 import { getWaitTimes } from "../../services/parks";
 import strings from "../../strings";
+import { getClosestMatch } from "../../utils";
 import { getSelectedPark } from "../data/userData";
+import { IWhichRideArgs } from "./rides";
 
 async function dialog(
   session: Session,
@@ -11,12 +19,12 @@ async function dialog(
 ) {
   session.sendTyping();
 
-  // Casting as string to remove undefined since at this point it will be set.
-  const park = getSelectedPark(session) as string;
+  // Removing undefined since at this point it will be set.
+  const park = getSelectedPark(session)!;
 
   const waitTimes = await getWaitTimes(park);
 
-  let message = strings.waitTimes.noData;
+  let message = strings.waitTimes.common.noData;
 
   if (waitTimes !== null) {
     message = createMessage(waitTimes);
@@ -39,10 +47,10 @@ function rideWaitTimeSort(a: IRideWaitTime, b: IRideWaitTime) {
 
 function createRideWaitTimeMessage(w: IRideWaitTime) {
   const status = w.isRunning
-    ? format(strings.waitTimes.time, w.waitTime)
-    : strings.waitTimes.closed;
+    ? format(strings.waitTimes.common.time, w.waitTime)
+    : strings.waitTimes.common.closed;
 
-  return format(strings.waitTimes.waitTime, w.name, status);
+  return format(strings.waitTimes.common.waitTime, w.name, status);
 }
 
 const lib = new Library("waitTimes");
@@ -71,7 +79,7 @@ lib
     function shortestMessage(waitTimes: IRideWaitTime[]) {
       const runningRides = waitTimes.filter(wt => wt.isRunning === true);
 
-      let message = strings.waitTimes.allRidesClosed;
+      let message = strings.waitTimes.common.allRidesClosed;
 
       if (runningRides.length > 0) {
         const shortest = runningRides.sort(rideWaitTimeSort)[0];
@@ -97,7 +105,7 @@ lib
     function longestMessage(waitTimes: IRideWaitTime[]) {
       const runningRides = waitTimes.filter(wt => wt.isRunning === true);
 
-      let message = strings.waitTimes.allRidesClosed;
+      let message = strings.waitTimes.common.allRidesClosed;
 
       if (runningRides.length > 0) {
         const longest = runningRides.sort(rideWaitTimeSort)[
@@ -118,6 +126,68 @@ lib
   .triggerAction({
     // LUIS intent
     matches: "waitTimes:longest"
+  });
+
+lib
+  .dialog("ride", [
+    async (session, args, next) => {
+      session.sendTyping();
+
+      // Removing undefined since at this point it will be set.
+      const park = getSelectedPark(session)!;
+
+      const waitTimes = await getWaitTimes(park);
+
+      if (waitTimes !== null) {
+        const rideNames = waitTimes.map(wt => wt.name);
+        session.dialogData.waitTimes = waitTimes;
+
+        const intentEntities = args.intent.entities;
+
+        let rideName: string | null = null;
+
+        if (intentEntities.length > 0) {
+          // LUIS found a ride name.
+          const rideNameEntity: IEntity = EntityRecognizer.findEntity(
+            intentEntities,
+            "rideName"
+          );
+
+          rideName = getClosestMatch(rideNameEntity.entity, rideNames);
+        }
+
+        if (rideName !== null) {
+          const dialogResult: IDialogResult<string> = {
+            response: rideName
+          };
+
+          // Removing undefined as we do have a next step.
+          next!(dialogResult);
+        } else {
+          const whichRideArgs: IWhichRideArgs = {
+            rideNames
+          };
+
+          session.beginDialog("rides:whichRide", whichRideArgs);
+        }
+      } else {
+        session.endDialog(strings.waitTimes.common.noData);
+      }
+    },
+    (session, result: IDialogResult<string>) => {
+      const parkName = result.response;
+
+      const waitTimes: IRideWaitTime[] = session.dialogData.waitTimes;
+
+      // Removing undefined as the park name comes from this list.
+      const rideWaitTime = waitTimes.find(wt => wt.name === parkName)!;
+
+      session.endDialog(createRideWaitTimeMessage(rideWaitTime));
+    }
+  ])
+  .triggerAction({
+    // LUIS intent
+    matches: "waitTimes:ride"
   });
 
 export default lib;
