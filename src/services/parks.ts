@@ -1,7 +1,11 @@
 import debug = require("debug");
 import moment = require("moment-timezone");
 import { AllParks, Park, ScheduleData } from "themeparks";
-import { IParkOperatingHours, IRideWaitTime } from "../models";
+import {
+  IParkOperatingHours,
+  IRideFastPassTime,
+  IRideWaitTime
+} from "../models";
 
 const log = debug("services:parks");
 
@@ -40,7 +44,8 @@ export async function getOperatingHours(
   parkName: string,
   date: moment.Moment
 ): Promise<IParkOperatingHours | null> {
-  const park = parksMap.get(parkName) as Park;
+  // Removing undefined.
+  const park = parksMap.get(parkName)!;
 
   let filteredSchedules: ScheduleData[] | null = null;
 
@@ -107,7 +112,8 @@ export async function getOperatingHours(
 export async function getWaitTimes(
   parkName: string
 ): Promise<IRideWaitTime[] | null> {
-  const park = parksMap.get(parkName) as Park;
+  // Removing undefined
+  const park = parksMap.get(parkName)!;
 
   let waitTimes: IRideWaitTime[] | null = null;
 
@@ -130,4 +136,45 @@ export async function getWaitTimes(
   }
 
   return waitTimes;
+}
+
+export function supportsFastPass(parkName: string) {
+  const park = parksMap.get(parkName)!;
+
+  return park.FastPass;
+}
+
+export async function getFastPassTimes(
+  parkName: string
+): Promise<IRideFastPassTime[] | null> {
+  const park = parksMap.get(parkName) as Park;
+
+  let fastPassTimes: IRideFastPassTime[] | null = null;
+
+  try {
+    const times = await park.GetWaitTimesPromise();
+
+    if (times !== null) {
+      const ridesThatSupportFastPass = times.filter(wt => wt.fastPass === true);
+
+      fastPassTimes = ridesThatSupportFastPass.map(wt => {
+        let isAvailable = false;
+        let startTime: moment.Moment | null = null;
+        let endTime: moment.Moment | null = null;
+
+        return {
+          name: wt.name,
+          isAvailable,
+          startTime,
+          endTime
+        };
+      });
+
+      fastPassTimes = fastPassTimes.sort((a, b) => stringSort(a.name, b.name));
+    }
+  } catch (e) {
+    log(e);
+  }
+
+  return fastPassTimes;
 }
