@@ -128,7 +128,6 @@ lib
     matches: "waitTimes:longest"
   });
 
-// TODO Test this now that refactored.
 lib
   .dialog("ride", [
     async (session, args, next) => {
