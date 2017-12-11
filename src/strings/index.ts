@@ -40,6 +40,13 @@ export default {
         "Sorry I didn’t understand. Please choose an option from the list by either entering the number or park name."
     }
   },
+  rides: {
+    whichRide: {
+      prompt: "Sorry I didn't understand. Which ride are you interested in?",
+      retryPrompt:
+        "Sorry I didn’t understand. Please choose an option from the list by either entering the number or ride name."
+    }
+  },
   waitTimes: {
     all: {
       message: "The current wait times are:\n\n"
@@ -56,13 +63,6 @@ export default {
     },
     shortest: {
       message: "The shortest wait time is: %s"
-    }
-  },
-  rides: {
-    whichRide: {
-      prompt: "Sorry I didn't understand. Which ride are you interested in?",
-      retryPrompt:
-        "Sorry I didn’t understand. Please choose an option from the list by either entering the number or ride name."
     }
   }
 };

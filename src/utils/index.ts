@@ -1,11 +1,11 @@
 import * as Fuse from "fuse.js";
 
 const fuseOptions: Fuse.FuseOptions = {
-  shouldSort: true,
-  threshold: 0.5,
-  location: 0,
   distance: 100,
-  maxPatternLength: 32
+  location: 0,
+  maxPatternLength: 32,
+  shouldSort: true,
+  threshold: 0.5
 };
 
 export function getClosestMatch(input: string, options: string[]) {

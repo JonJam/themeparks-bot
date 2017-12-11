@@ -1,17 +1,17 @@
 import {
   EntityRecognizer,
+  IDialogResult,
   IEntity,
   Library,
-  Session,
-  IDialogResult
+  Session
 } from "botbuilder";
 import { format } from "util";
 import { IRideWaitTime } from "../../models";
 import { getWaitTimes } from "../../services/parks";
 import strings from "../../strings";
-import { getSelectedPark } from "../data/userData";
 import { getClosestMatch } from "../../utils";
-import { IWhichRideArgs } from "src/bot/dialogs/rides";
+import { getSelectedPark } from "../data/userData";
+import { IWhichRideArgs } from "./rides";
 
 async function dialog(
   session: Session,
@@ -128,6 +128,7 @@ lib
     matches: "waitTimes:longest"
   });
 
+// TODO Test this now that refactored.
 lib
   .dialog("ride", [
     async (session, args, next) => {
@@ -146,7 +147,7 @@ lib
 
         let rideName: string | null = null;
 
-        if (intentEntities > 0) {
+        if (intentEntities.length > 0) {
           // LUIS found a ride name.
           const rideNameEntity: IEntity = EntityRecognizer.findEntity(
             intentEntities,
@@ -164,11 +165,11 @@ lib
           // Removing undefined as we do have a next step.
           next!(dialogResult);
         } else {
-          const args: IWhichRideArgs = {
+          const whichRideArgs: IWhichRideArgs = {
             rideNames
           };
 
-          session.beginDialog("rides:whichPark", args);
+          session.beginDialog("rides:whichRide", whichRideArgs);
         }
       } else {
         session.endDialog(strings.waitTimes.common.noData);
