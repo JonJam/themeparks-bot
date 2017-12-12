@@ -31,6 +31,8 @@ lib.dialog("whichRide", [
   }
 ]);
 
+// TODO refactor below to use common function
+
 lib
   .dialog("all", async session => {
     session.sendTyping();
@@ -56,6 +58,19 @@ lib
   .triggerAction({
     // LUIS intent
     matches: "rides:all"
+  });
+
+// TODO working here
+lib
+  .dialog("fastPass", async session => {
+    session.sendTyping();
+
+    // Removing undefined since at this point it will be set.
+    const park = getSelectedPark(session)!;
+  })
+  .triggerAction({
+    // LUIS intent
+    matches: "rides:fastPass"
   });
 
 export default lib;
