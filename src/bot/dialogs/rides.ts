@@ -29,6 +29,28 @@ lib.dialog("whichRide", [
   }
 ]);
 
+lib
+  .dialog("all", async session => {
+    session.sendTyping();
+
+    // Removing undefined since at this point it will be set.
+    const park = getSelectedPark(session)!;
+
+    const waitTimes = await getWaitTimes(park);
+
+    let message = strings.waitTimes.common.noData;
+
+    if (waitTimes !== null) {
+      message = createMessage(waitTimes);
+    }
+
+    session.endDialog(message);
+  })
+  .triggerAction({
+    // LUIS intent
+    matches: "rides:all"
+  });
+
 export default lib;
 
 export interface IWhichRideArgs {

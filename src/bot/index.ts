@@ -11,7 +11,6 @@ import operatingHours from "./dialogs/operatingHours";
 import parks from "./dialogs/parks";
 import rides from "./dialogs/rides";
 import waitTimes from "./dialogs/waitTimes";
-import fastPass from "./dialogs/fastPass";
 
 // Create chat connector for communicating with the Bot Framework Service
 const connector = new ChatConnector({
@@ -26,7 +25,6 @@ bot.library(operatingHours.clone());
 bot.library(parks.clone());
 bot.library(rides.clone());
 bot.library(waitTimes.clone());
-bot.library(fastPass.clone());
 
 // This may not be supported by all channcels, see alternative: https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-handle-conversation-events
 bot.on("conversationUpdate", (message: IConversationUpdate) => {

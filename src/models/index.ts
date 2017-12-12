@@ -14,13 +14,6 @@ export interface IParkOperatingHours {
   additionalHours?: IAdditionalParkOperatingHours[];
 }
 
-export interface IRideFastPassTime {
-  name: string;
-  isAvailable: boolean;
-  startTime: moment.Moment | null;
-  endTime: moment.Moment | null;
-}
-
 export interface IRideWaitTime {
   name: string;
   waitTime: number;
