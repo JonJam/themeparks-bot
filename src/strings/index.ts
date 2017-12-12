@@ -41,6 +41,10 @@ export default {
     }
   },
   rides: {
+    all: {
+      message: "The rides are:\n\n",
+      noData: "Sorry I was unable to get ride information at this time."
+    },
     whichRide: {
       prompt: "Sorry I didn't understand. Which ride are you interested in?",
       retryPrompt:

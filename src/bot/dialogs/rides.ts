@@ -5,7 +5,9 @@ import {
   ListStyle,
   Prompts
 } from "botbuilder";
+import { getWaitTimes } from "../../services/parks";
 import strings from "../../strings";
+import { getSelectedPark } from "../data/userData";
 
 const lib = new Library("rides");
 
@@ -36,12 +38,17 @@ lib
     // Removing undefined since at this point it will be set.
     const park = getSelectedPark(session)!;
 
+    // TODO Think about whether create another method for this.
     const waitTimes = await getWaitTimes(park);
 
-    let message = strings.waitTimes.common.noData;
+    let message = strings.rides.all.noData;
 
     if (waitTimes !== null) {
-      message = createMessage(waitTimes);
+      message = strings.rides.all.message;
+
+      waitTimes.forEach(w => {
+        message += `* ${w.name}\n\n`;
+      });
     }
 
     session.endDialog(message);

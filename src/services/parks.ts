@@ -1,11 +1,7 @@
 import debug = require("debug");
 import moment = require("moment-timezone");
 import { AllParks, Park, ScheduleData } from "themeparks";
-import {
-  IParkOperatingHours,
-  IRideFastPassTime,
-  IRideWaitTime
-} from "../models";
+import { IParkOperatingHours, IRideWaitTime } from "../models";
 
 const log = debug("services:parks");
 
