@@ -40,7 +40,8 @@ export async function getOperatingHours(
   parkName: string,
   date: moment.Moment
 ): Promise<IParkOperatingHours | null> {
-  const park = parksMap.get(parkName) as Park;
+  // Removing undefined.
+  const park = parksMap.get(parkName)!;
 
   let filteredSchedules: ScheduleData[] | null = null;
 
@@ -107,7 +108,8 @@ export async function getOperatingHours(
 export async function getWaitTimes(
   parkName: string
 ): Promise<IRideWaitTime[] | null> {
-  const park = parksMap.get(parkName) as Park;
+  // Removing undefined
+  const park = parksMap.get(parkName)!;
 
   let waitTimes: IRideWaitTime[] | null = null;
 
