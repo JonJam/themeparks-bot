@@ -42,8 +42,14 @@ export default {
   },
   rides: {
     all: {
-      message: "The rides are:\n\n",
+      message: "The rides are:\n\n"
+    },
+    commom: {
       noData: "Sorry I was unable to get ride information at this time."
+    },
+    fastPass: {
+      message: "The rides with fast pass are:\n\n",
+      notSupported: "%s does not have fast pass."
     },
     whichRide: {
       prompt: "Sorry I didn't understand. Which ride are you interested in?",

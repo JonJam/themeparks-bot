@@ -1,7 +1,7 @@
 import debug = require("debug");
 import moment = require("moment-timezone");
 import { AllParks, Park, ScheduleData } from "themeparks";
-import { IParkOperatingHours, IRideWaitTime, IRideInfo } from "../models";
+import { IParkOperatingHours, IRideInfo, IRideWaitTime } from "../models";
 
 const log = debug("services:parks");
 
@@ -134,7 +134,13 @@ export async function getWaitTimes(
   return waitTimes;
 }
 
-// TODO test
+export function supportsFastPass(parkName: string): boolean {
+  // Removing undefined
+  const park = parksMap.get(parkName)!;
+
+  return park.FastPass;
+}
+
 export async function getRidesInfo(
   parkName: string
 ): Promise<IRideInfo[] | null> {
