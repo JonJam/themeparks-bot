@@ -5,7 +5,8 @@ import {
   ListStyle,
   Prompts
 } from "botbuilder";
-import { getWaitTimes } from "../../services/parks";
+import { format } from "util";
+import { getRidesInfo, supportsFastPass } from "../../services/parks";
 import strings from "../../strings";
 import { getSelectedPark } from "../data/userData";
 
@@ -31,6 +32,8 @@ lib.dialog("whichRide", [
   }
 ]);
 
+// TODO refactor below to use common function
+
 lib
   .dialog("all", async session => {
     session.sendTyping();
@@ -38,16 +41,15 @@ lib
     // Removing undefined since at this point it will be set.
     const park = getSelectedPark(session)!;
 
-    // TODO Think about whether create another method for this.
-    const waitTimes = await getWaitTimes(park);
+    const ridesInfo = await getRidesInfo(park);
 
-    let message = strings.rides.all.noData;
+    let message = strings.rides.commom.noData;
 
-    if (waitTimes !== null) {
+    if (ridesInfo !== null) {
       message = strings.rides.all.message;
 
-      waitTimes.forEach(w => {
-        message += `* ${w.name}\n\n`;
+      ridesInfo.forEach(ri => {
+        message += `* ${ri.name}\n\n`;
       });
     }
 
@@ -56,6 +58,38 @@ lib
   .triggerAction({
     // LUIS intent
     matches: "rides:all"
+  });
+
+lib
+  .dialog("fastPass", async session => {
+    session.sendTyping();
+
+    // Removing undefined since at this point it will be set.
+    const park = getSelectedPark(session)!;
+
+    let message = format(strings.rides.fastPass.notSupported, park);
+
+    if (supportsFastPass(park) === true) {
+      let ridesInfo = await getRidesInfo(park);
+
+      if (ridesInfo !== null) {
+        message = strings.rides.fastPass.message;
+
+        ridesInfo = ridesInfo.filter(ri => ri.fastPass === true);
+
+        ridesInfo.forEach(ri => {
+          message += `* ${ri.name}\n\n`;
+        });
+      } else {
+        message = strings.rides.commom.noData;
+      }
+    }
+
+    session.endDialog(message);
+  })
+  .triggerAction({
+    // LUIS intent
+    matches: "rides:fastPass"
   });
 
 export default lib;

@@ -19,3 +19,9 @@ export interface IRideWaitTime {
   waitTime: number;
   isRunning: boolean;
 }
+
+export interface IRideInfo {
+  name: string;
+  fastPass: boolean;
+  isRunning: boolean;
+}
