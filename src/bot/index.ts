@@ -6,6 +6,7 @@ import {
 } from "botbuilder";
 import { appId, appPassword, luisAppUrl } from "../settings";
 import defaultDialog from "./dialogs/default";
+import fastPass from "./dialogs/fastPass";
 import greetings from "./dialogs/greetings";
 import operatingHours from "./dialogs/operatingHours";
 import parks from "./dialogs/parks";
@@ -20,6 +21,7 @@ const connector = new ChatConnector({
 
 const bot = new UniversalBot(connector, defaultDialog);
 bot.recognizer(new LuisRecognizer(luisAppUrl));
+bot.library(fastPass.clone());
 bot.library(greetings.clone());
 bot.library(operatingHours.clone());
 bot.library(parks.clone());
