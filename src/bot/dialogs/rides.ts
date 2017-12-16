@@ -42,7 +42,7 @@ lib
 
     const ridesInfo = await getRidesInfo(park);
 
-    let message = strings.rides.commom.noData;
+    let message = strings.rides.common.noData;
 
     if (ridesInfo !== null) {
       message = strings.rides.all.message;

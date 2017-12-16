@@ -133,6 +133,11 @@ lib
     async (session, args, next) => {
       session.sendTyping();
 
+      const rideNameEntity: IEntity | null = EntityRecognizer.findEntity(
+        args.intent.entities,
+        "rideName"
+      );
+
       // Removing undefined since at this point it will be set.
       const park = getSelectedPark(session)!;
 
@@ -142,17 +147,10 @@ lib
         const rideNames = waitTimes.map(wt => wt.name);
         session.dialogData.waitTimes = waitTimes;
 
-        const intentEntities = args.intent.entities;
-
         let rideName: string | null = null;
 
-        if (intentEntities.length > 0) {
+        if (rideNameEntity !== null) {
           // LUIS found a ride name.
-          const rideNameEntity: IEntity = EntityRecognizer.findEntity(
-            intentEntities,
-            "rideName"
-          );
-
           rideName = getClosestMatch(rideNameEntity.entity, rideNames);
         }
 

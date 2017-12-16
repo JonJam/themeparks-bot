@@ -44,7 +44,7 @@ export default {
     all: {
       message: "The rides are:\n\n"
     },
-    commom: {
+    common: {
       noData: "Sorry I was unable to get ride information at this time."
     },
     whichRide: {
@@ -54,12 +54,19 @@ export default {
     }
   },
   status: {
-    commom: {
+    common: {
       noData: "Sorry I was unable to get ride information at this time."
     },
     all: {
       closedMessage: "The closed rides are:\n\n",
       openMessage: "The open rides are:\n\n"
+    },
+    ride: {
+      message: "%s. %s is %s.",
+      open: "open",
+      closed: "closed",
+      yes: "Yes",
+      no: "No"
     }
   },
   fastPass: {
@@ -67,7 +74,7 @@ export default {
       message: "The rides with fast pass are:\n\n",
       notSupported: "%s does not have fast pass."
     },
-    commom: {
+    common: {
       noData: "Sorry I was unable to get ride information at this time."
     }
   },

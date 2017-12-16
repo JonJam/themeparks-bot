@@ -27,7 +27,7 @@ lib
           message += `* ${ri.name}\n\n`;
         });
       } else {
-        message = strings.fastPass.commom.noData;
+        message = strings.fastPass.common.noData;
       }
     }
 
