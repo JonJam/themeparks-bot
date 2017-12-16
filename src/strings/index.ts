@@ -51,6 +51,10 @@ export default {
       message: "The rides with fast pass are:\n\n",
       notSupported: "%s does not have fast pass."
     },
+    status: {
+      closedMessage: "The closed rides are:\n\n",
+      openMessage: "The open rides are:\n\n"
+    },
     whichRide: {
       prompt: "Sorry I didn't understand. Which ride are you interested in?",
       retryPrompt:

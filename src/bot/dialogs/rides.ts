@@ -1,11 +1,14 @@
 import {
+  EntityRecognizer,
   IDialogResult,
+  IEntity,
   IPromptChoiceResult,
   Library,
   ListStyle,
   Prompts
 } from "botbuilder";
 import { format } from "util";
+import { RideStatus } from "../../models";
 import { getRidesInfo, supportsFastPass } from "../../services/parks";
 import strings from "../../strings";
 import { getSelectedPark } from "../data/userData";
@@ -90,6 +93,46 @@ lib
   .triggerAction({
     // LUIS intent
     matches: "rides:fastPass"
+  });
+
+lib
+  .dialog("status", async (session, args) => {
+    session.sendTyping();
+
+    const rideStatusEntity: IEntity = EntityRecognizer.findEntity(
+      args.intent.entities,
+      "rideStatus"
+    );
+    const status: RideStatus = rideStatusEntity.entity;
+
+    // Removing undefined since at this point it will be set.
+    const park = getSelectedPark(session)!;
+
+    let ridesInfo = await getRidesInfo(park);
+
+    let message = strings.rides.commom.noData;
+
+    if (ridesInfo !== null) {
+      let isRunning = true;
+      if (status === RideStatus.Open) {
+        message = strings.rides.status.openMessage;
+      } else {
+        message = strings.rides.status.closedMessage;
+        isRunning = false;
+      }
+
+      ridesInfo = ridesInfo.filter(ri => ri.isRunning === isRunning);
+
+      ridesInfo.forEach(ri => {
+        message += `* ${ri.name}\n\n`;
+      });
+    }
+
+    session.endDialog(message);
+  })
+  .triggerAction({
+    // LUIS intent
+    matches: "rides:status"
   });
 
 export default lib;
