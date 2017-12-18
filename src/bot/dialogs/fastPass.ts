@@ -1,4 +1,4 @@
-import { Library } from "botbuilder";
+import { EntityRecognizer, IEntity, Library } from "botbuilder";
 import { format } from "util";
 import { getRidesInfo, supportsFastPass } from "../../services/parks";
 import strings from "../../strings";
@@ -38,94 +38,92 @@ lib
     matches: "fastPass:all"
   });
 
-// TODO Create intent
 // TODO implement below
 // TODO Remember to check fastpass on theme park
 
-// lib
-// .dialog("ride", [
-//   async (session, args, next) => {
-//     session.sendTyping();
+lib
+  .dialog("ride", [
+    async (session, args, next) => {
+      session.sendTyping();
 
-//     const rideStatusEntity: IEntity = EntityRecognizer.findEntity(
-//       args.intent.entities,
-//       "rideStatus"
-//     );
-//     const rideNameEntity: IEntity | null = EntityRecognizer.findEntity(
-//       args.intent.entities,
-//       "rideName"
-//     );
+      const rideNameEntity: IEntity | null = EntityRecognizer.findEntity(
+        args.intent.entities,
+        "rideName"
+      );
 
-//     session.dialogData.status = rideStatusEntity.entity;
+      // Removing undefined since at this point it will be set.
+      const park = getSelectedPark(session)!;
 
-//     // Removing undefined since at this point it will be set.
-//     const park = getSelectedPark(session)!;
+      let message = format(strings.fastPass.all.notSupported, park);
 
-//     const ridesInfo = await getRidesInfo(park);
+      if (supportsFastPass(park) === true) {
+      }
 
-//     if (ridesInfo !== null) {
-//       const rideNames = ridesInfo.map(ri => ri.name);
-//       session.dialogData.ridesInfo = ridesInfo;
+      // const ridesInfo = await getRidesInfo(park);
 
-//       let rideName: string | null = null;
+      // if (ridesInfo !== null) {
+      //   const rideNames = ridesInfo.map(ri => ri.name);
+      //   session.dialogData.ridesInfo = ridesInfo;
 
-//       if (rideNameEntity !== null) {
-//         // LUIS found a ride name.
-//         rideName = getClosestMatch(rideNameEntity.entity, rideNames);
-//       }
+      //   let rideName: string | null = null;
 
-//       if (rideName !== null) {
-//         const dialogResult: IDialogResult<string> = {
-//           response: rideName
-//         };
+      //   if (rideNameEntity !== null) {
+      //     // LUIS found a ride name.
+      //     rideName = getClosestMatch(rideNameEntity.entity, rideNames);
+      //   }
 
-//         // Removing undefined as we do have a next step.
-//         next!(dialogResult);
-//       } else {
-//         const whichRideArgs: IWhichRideArgs = {
-//           rideNames
-//         };
+      //   if (rideName !== null) {
+      //     const dialogResult: IDialogResult<string> = {
+      //       response: rideName
+      //     };
 
-//         session.beginDialog("rides:whichRide", whichRideArgs);
-//       }
-//     } else {
-//       session.endDialog(strings.status.common.noData);
-//     }
-//   },
-//   (session, result: IDialogResult<string>) => {
-//     const parkName = result.response;
+      //     // Removing undefined as we do have a next step.
+      //     next!(dialogResult);
+      //   } else {
+      //     const whichRideArgs: IWhichRideArgs = {
+      //       rideNames
+      //     };
 
-//     const ridesInfo: IRideInfo[] = session.dialogData.ridesInfo;
-//     const status: RideStatus = session.dialogData.status;
+      //     session.beginDialog("rides:whichRide", whichRideArgs);
+      //   }
+      // } else {
+      //   session.endDialog(strings.status.common.noData);
+      // }
+    },
+    (session, result: IDialogResult<string>) => {
+      const parkName = result.response;
 
-//     // Removing undefined as the park name comes from this list.
-//     const rideInfo = ridesInfo.find(ri => ri.name === parkName)!;
+      const ridesInfo: IRideInfo[] = session.dialogData.ridesInfo;
+      const status: RideStatus = session.dialogData.status;
 
-//     let yesNo = "";
+      // Removing undefined as the park name comes from this list.
+      const rideInfo = ridesInfo.find(ri => ri.name === parkName)!;
 
-//     if (status === RideStatus.Open) {
-//       yesNo = rideInfo.isRunning
-//         ? strings.status.ride.yes
-//         : strings.status.ride.no;
-//     } else {
-//       yesNo = !rideInfo.isRunning
-//         ? strings.status.ride.yes
-//         : strings.status.ride.no;
-//     }
+      let yesNo = "";
 
-//     const message = format(
-//       strings.status.ride.message,
-//       yesNo,
-//       rideInfo.name,
-//       rideInfo.isRunning ? strings.status.ride.open : strings.status.ride.open
-//     );
+      if (status === RideStatus.Open) {
+        yesNo = rideInfo.isRunning
+          ? strings.status.ride.yes
+          : strings.status.ride.no;
+      } else {
+        yesNo = !rideInfo.isRunning
+          ? strings.status.ride.yes
+          : strings.status.ride.no;
+      }
 
-//     session.endDialog(message);
-//   }
-// ])
-// .triggerAction({
-//   // LUIS intent
-//   matches: "waitTimes:ride"
-// });
+      const message = format(
+        strings.status.ride.message,
+        yesNo,
+        rideInfo.name,
+        rideInfo.isRunning ? strings.status.ride.open : strings.status.ride.open
+      );
+
+      session.endDialog(message);
+    }
+  ])
+  .triggerAction({
+    // LUIS intent
+    matches: "fastPass:ride"
+  });
 
 export default lib;
