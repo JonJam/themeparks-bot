@@ -25,3 +25,9 @@ export interface IRideInfo {
   fastPass: boolean;
   isRunning: boolean;
 }
+
+// This matches the rideStatus LUIS entity.
+export enum RideStatus {
+  Closed = "closed",
+  Open = "open"
+}
