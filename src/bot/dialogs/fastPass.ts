@@ -82,7 +82,7 @@ lib
           session.beginDialog("rides:whichRide", whichRideArgs);
         }
       } else {
-        session.endDialog(strings.status.common.noData);
+        session.endDialog(strings.fastPass.common.noData);
       }
     },
     (session, result: IDialogResult<string>) => {
