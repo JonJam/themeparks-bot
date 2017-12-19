@@ -1,4 +1,17 @@
 export default {
+  fastPass: {
+    all: {
+      message: "The rides with fast pass are:\n\n",
+      notSupported: "%s does not have fast pass."
+    },
+    common: {
+      noData: "Sorry I was unable to get ride information at this time."
+    },
+    ride: {
+      noMessage: "No. %s doesn't have fast pass.",
+      yesMessage: "Yes. %s has fast pass."
+    }
+  },
   greetings: {
     goodbye: {
       message: "Bye."
@@ -54,28 +67,19 @@ export default {
     }
   },
   status: {
-    common: {
-      noData: "Sorry I was unable to get ride information at this time."
-    },
     all: {
       closedMessage: "The closed rides are:\n\n",
       openMessage: "The open rides are:\n\n"
     },
-    ride: {
-      message: "%s. %s is %s.",
-      open: "open",
-      closed: "closed",
-      yes: "Yes",
-      no: "No"
-    }
-  },
-  fastPass: {
-    all: {
-      message: "The rides with fast pass are:\n\n",
-      notSupported: "%s does not have fast pass."
-    },
     common: {
       noData: "Sorry I was unable to get ride information at this time."
+    },
+    ride: {
+      closed: "closed",
+      message: "%s. %s is %s.",
+      no: "No",
+      open: "open",
+      yes: "Yes"
     }
   },
   waitTimes: {

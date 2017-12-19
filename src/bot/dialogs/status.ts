@@ -1,11 +1,11 @@
 import { EntityRecognizer, IDialogResult, IEntity, Library } from "botbuilder";
-import { RideStatus, IRideInfo } from "../../models";
+import { format } from "util";
+import { IRideInfo, RideStatus } from "../../models";
 import { getRidesInfo } from "../../services/parks";
 import strings from "../../strings";
-import { getSelectedPark } from "../data/userData";
 import { getClosestMatch } from "../../utils";
+import { getSelectedPark } from "../data/userData";
 import { IWhichRideArgs } from "./rides";
-import { format } from "util";
 
 const lib = new Library("status");
 
