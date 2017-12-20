@@ -47,3 +47,6 @@ export const appId = process.env.MICROSOFT_APP_ID;
 export const appPassword = process.env.MICROSOFT_APP_PASSWORD;
 export const port = normalizePort(process.env.PORT || "8080");
 export const luisAppUrl = getLuisAppUrl(process.env.LUIS_APP_URL);
+export const tableName = process.env.TABLE_NAME || "botstate";
+export const storageAccountName = process.env.STORAGE_ACCOUNT_NAME;
+export const storageAccountKey = process.env.STORAGE_ACCOUNT_KEY;

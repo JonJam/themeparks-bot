@@ -13,6 +13,7 @@ import parks from "./dialogs/parks";
 import rides from "./dialogs/rides";
 import status from "./dialogs/status";
 import waitTimes from "./dialogs/waitTimes";
+import storage from "./storage";
 
 // Create chat connector for communicating with the Bot Framework Service
 const connector = new ChatConnector({
@@ -21,6 +22,7 @@ const connector = new ChatConnector({
 });
 
 const bot = new UniversalBot(connector, defaultDialog);
+bot.set("storage", storage);
 bot.recognizer(new LuisRecognizer(luisAppUrl));
 bot.library(fastPass.clone());
 bot.library(greetings.clone());

@@ -132,7 +132,7 @@ lib
   ])
   .triggerAction({
     // LUIS intent
-    matches: "waitTimes:ride"
+    matches: "status:ride"
   });
 
 export default lib;
