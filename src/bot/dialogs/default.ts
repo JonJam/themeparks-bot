@@ -1,27 +1,20 @@
-import { IDialogResult, Session } from "botbuilder";
-import { getSelectedPark, setSelectedPark } from "../data/userData";
+import { Session } from "botbuilder";
+import strings from "../../strings";
+import { format } from "util";
 
 // https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-dialog-overview#default-dialog
 // Called whenever the dialog stack is empty and no other dialog triggered.
 export default [
   (session: Session) => {
-    session.beginDialog("greetings:hello");
-  },
-  (session: Session) => {
-    const selectedPark = getSelectedPark(session);
+    const randomIndex = Math.floor(
+      Math.random() * strings.default.randomMessage.length
+    );
 
-    if (selectedPark) {
-      session.beginDialog("parks:stillInterestedInPark");
-    } else {
-      session.beginDialog("parks:whichPark");
-    }
-  },
-  (session: Session, results: IDialogResult<string>) => {
-    // Removing undefined as we know that if reach here then a park has been selected.
-    const park = results.response!;
+    const message = format(
+      strings.default.message,
+      strings.default.randomMessage[randomIndex]
+    );
 
-    setSelectedPark(session, park);
-
-    session.beginDialog("parks:parkIntro");
+    session.endDialog(message);
   }
 ];

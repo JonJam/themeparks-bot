@@ -1,9 +1,4 @@
-import {
-  ChatConnector,
-  IConversationUpdate,
-  LuisRecognizer,
-  UniversalBot
-} from "botbuilder";
+import { ChatConnector, LuisRecognizer, UniversalBot } from "botbuilder";
 import { appId, appPassword, luisAppUrl } from "../settings";
 import defaultDialog from "./dialogs/default";
 import fastPass from "./dialogs/fastPass";
@@ -33,27 +28,5 @@ bot.library(parks.clone());
 bot.library(rides.clone());
 bot.library(status.clone());
 bot.library(waitTimes.clone());
-
-// This may not be supported by all channcels, see alternative: https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-handle-conversation-events
-bot.on("conversationUpdate", (message: IConversationUpdate) => {
-  if (message.membersAdded) {
-    message.membersAdded.forEach(identity => {
-      if (identity.id === message.address.bot.id) {
-        // Bot added to conversation, so display welcome message.
-        // https://github.com/Microsoft/BotBuilder-Samples/tree/master/Node/demo-ContosoFlowers#welcome-message
-        bot.beginDialog(message.address, "/");
-      }
-    });
-  }
-
-  // TODO Test this works
-  if (message.membersRemoved) {
-    message.membersRemoved.forEach(identity => {
-      if (identity.id === message.address.bot.id) {
-        bot.beginDialog(message.address, "greetings:goodbye");
-      }
-    });
-  }
-});
 
 export default connector;
