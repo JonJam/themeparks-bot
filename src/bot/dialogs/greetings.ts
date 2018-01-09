@@ -1,6 +1,7 @@
-import { Library } from "botbuilder";
+import { IDialogResult, Library } from "botbuilder";
+import { format } from "util";
 import strings from "../../strings";
-import { getFirstRun, setFirstRun } from "../data/userData";
+import { getFirstRun, getSelectedPark, setFirstRun } from "../data/userData";
 
 const lib = new Library("greetings");
 
@@ -23,31 +24,30 @@ lib
     }
   });
 
-// TODO Change this to say still interested in park ?
 lib
-  .dialog("hello", session => {
-    let message = strings.greetings.hello.welcomeBack;
+  .dialog("hello", [
+    // tslint:disable-next-line:variable-name
+    (session, _result, skip) => {
+      session.send(strings.greetings.hello.message);
 
-    // (session: Session) => {
-    //   const selectedPark = getSelectedPark(session);
+      const selectedPark = getSelectedPark(session);
 
-    //   if (selectedPark) {
-    //     session.beginDialog("parks:stillInterestedInPark");
-    //   } else {
-    //     session.beginDialog("parks:whichPark");
-    //   }
-    // },
-    // (session: Session, results: IDialogResult<string>) => {
-    //   // Removing undefined as we know that if reach here then a park has been selected.
-    //   const park = results.response!;
+      if (selectedPark) {
+        session.beginDialog("parks:stillInterestedInPark");
+      } else {
+        skip!();
+      }
+    },
+    (session, args: IDialogResult<string>) => {
+      let message = "";
 
-    //   setSelectedPark(session, park);
+      if (args.response) {
+        message = format(strings.greetings.hello.selected, args.response);
+      }
 
-    //   session.beginDialog("parks:parkIntro");
-    // }
-
-    session.endDialog(message);
-  })
+      session.endDialog(message);
+    }
+  ])
   .triggerAction({
     // LUIS intent
     matches: "greetings:hello"

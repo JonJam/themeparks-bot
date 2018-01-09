@@ -26,8 +26,8 @@ export interface IRideInfo {
   isRunning: boolean;
 }
 
-// This matches the rideStatus LUIS entity.
-export enum RideStatus {
+// This matches the status LUIS entity.
+export enum Status {
   Closed = "closed",
   Open = "open"
 }

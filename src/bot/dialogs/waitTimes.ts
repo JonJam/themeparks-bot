@@ -15,13 +15,9 @@ import { IWhichRideArgs } from "./rides";
 
 async function dialog(
   session: Session,
+  park: string,
   createMessage: (waitTimes: IRideWaitTime[]) => string
 ) {
-  session.sendTyping();
-
-  // Removing undefined since at this point it will be set.
-  const park = getSelectedPark(session)!;
-
   const waitTimes = await getWaitTimes(park);
 
   let message = strings.waitTimes.common.noData;
@@ -56,73 +52,137 @@ function createRideWaitTimeMessage(w: IRideWaitTime) {
 const lib = new Library("waitTimes");
 
 lib
-  .dialog("all", async session => {
-    function allMessage(waitTimes: IRideWaitTime[]) {
-      let message = strings.waitTimes.all.message;
+  .dialog("all", [
+    // tslint:disable-next-line:variable-name
+    (session, _result, skip) => {
+      session.sendTyping();
 
-      waitTimes.forEach(w => {
-        message += `* ${createRideWaitTimeMessage(w)}`;
-      });
+      const park = getSelectedPark(session);
 
-      return message;
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const result: IDialogResult<string> = {
+          response: park
+        };
+
+        skip!(result);
+      }
+    },
+    async (session, result: IDialogResult<string>) => {
+      function allMessage(waitTimes: IRideWaitTime[]) {
+        let message = strings.waitTimes.all.message;
+
+        waitTimes.forEach(w => {
+          message += `* ${createRideWaitTimeMessage(w)}`;
+        });
+
+        return message;
+      }
+
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
+
+      await dialog(session, park, allMessage);
     }
-
-    await dialog(session, allMessage);
-  })
+  ])
   .triggerAction({
     // LUIS intent
     matches: "waitTimes:all"
   });
 
 lib
-  .dialog("shortest", async session => {
-    function shortestMessage(waitTimes: IRideWaitTime[]) {
-      const runningRides = waitTimes.filter(wt => wt.isRunning === true);
+  .dialog("shortest", [
+    // tslint:disable-next-line:variable-name
+    (session, _result, skip) => {
+      session.sendTyping();
 
-      let message = strings.waitTimes.common.allRidesClosed;
+      const park = getSelectedPark(session);
 
-      if (runningRides.length > 0) {
-        const shortest = runningRides.sort(rideWaitTimeSort)[0];
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const result: IDialogResult<string> = {
+          response: park
+        };
 
-        message = format(
-          strings.waitTimes.shortest.message,
-          createRideWaitTimeMessage(shortest)
-        );
+        skip!(result);
+      }
+    },
+    async (session, result: IDialogResult<string>) => {
+      function shortestMessage(waitTimes: IRideWaitTime[]) {
+        const runningRides = waitTimes.filter(wt => wt.isRunning === true);
+
+        let message = strings.waitTimes.common.allRidesClosed;
+
+        if (runningRides.length > 0) {
+          const shortest = runningRides.sort(rideWaitTimeSort)[0];
+
+          message = format(
+            strings.waitTimes.shortest.message,
+            createRideWaitTimeMessage(shortest)
+          );
+        }
+
+        return message;
       }
 
-      return message;
-    }
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
 
-    await dialog(session, shortestMessage);
-  })
+      await dialog(session, park, shortestMessage);
+    }
+  ])
   .triggerAction({
     // LUIS intent
     matches: "waitTimes:shortest"
   });
 
 lib
-  .dialog("longest", async session => {
-    function longestMessage(waitTimes: IRideWaitTime[]) {
-      const runningRides = waitTimes.filter(wt => wt.isRunning === true);
+  .dialog("longest", [
+    // tslint:disable-next-line:variable-name
+    (session, _result, skip) => {
+      session.sendTyping();
 
-      let message = strings.waitTimes.common.allRidesClosed;
+      const park = getSelectedPark(session);
 
-      if (runningRides.length > 0) {
-        const longest = runningRides.sort(rideWaitTimeSort)[
-          runningRides.length - 1
-        ];
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const result: IDialogResult<string> = {
+          response: park
+        };
 
-        message = format(
-          strings.waitTimes.longest.message,
-          createRideWaitTimeMessage(longest)
-        );
+        skip!(result);
+      }
+    },
+
+    async (session, result) => {
+      function longestMessage(waitTimes: IRideWaitTime[]) {
+        const runningRides = waitTimes.filter(wt => wt.isRunning === true);
+
+        let message = strings.waitTimes.common.allRidesClosed;
+
+        if (runningRides.length > 0) {
+          const longest = runningRides.sort(rideWaitTimeSort)[
+            runningRides.length - 1
+          ];
+
+          message = format(
+            strings.waitTimes.longest.message,
+            createRideWaitTimeMessage(longest)
+          );
+        }
+
+        return message;
       }
 
-      return message;
-    }
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
 
-    await dialog(session, longestMessage);
-  })
+      await dialog(session, park, longestMessage);
+    }
+  ])
   .triggerAction({
     // LUIS intent
     matches: "waitTimes:longest"
@@ -130,16 +190,31 @@ lib
 
 lib
   .dialog("ride", [
-    async (session, args, next) => {
+    (session, result, skip) => {
       session.sendTyping();
 
-      const rideNameEntity: IEntity | null = EntityRecognizer.findEntity(
-        args.intent.entities,
+      session.dialogData.rideNameEntity = EntityRecognizer.findEntity(
+        result.intent.entities,
         "rideName"
       );
 
-      // Removing undefined since at this point it will be set.
-      const park = getSelectedPark(session)!;
+      const park = getSelectedPark(session);
+
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const dialogResult: IDialogResult<string> = {
+          response: park
+        };
+
+        skip!(dialogResult);
+      }
+    },
+
+    async (session, result, skip) => {
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
+      const rideNameEntity: IEntity | null = session.dialogData.rideNameEntity;
 
       const waitTimes = await getWaitTimes(park);
 
@@ -160,7 +235,7 @@ lib
           };
 
           // Removing undefined as we do have a next step.
-          next!(dialogResult);
+          skip!(dialogResult);
         } else {
           const whichRideArgs: IWhichRideArgs = {
             rideNames
@@ -173,12 +248,12 @@ lib
       }
     },
     (session, result: IDialogResult<string>) => {
-      const parkName = result.response;
+      const rideName = result.response;
 
       const waitTimes: IRideWaitTime[] = session.dialogData.waitTimes;
 
       // Removing undefined as the park name comes from this list.
-      const rideWaitTime = waitTimes.find(wt => wt.name === parkName)!;
+      const rideWaitTime = waitTimes.find(wt => wt.name === rideName)!;
 
       session.endDialog(createRideWaitTimeMessage(rideWaitTime));
     }

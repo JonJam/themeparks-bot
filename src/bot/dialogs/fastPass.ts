@@ -10,32 +10,48 @@ import { IWhichRideArgs } from "./rides";
 const lib = new Library("fastPass");
 
 lib
-  .dialog("all", async session => {
-    session.sendTyping();
+  .dialog("all", [
+    // tslint:disable-next-line:variable-name
+    (session, _result, skip) => {
+      session.sendTyping();
 
-    // Removing undefined since at this point it will be set.
-    const park = getSelectedPark(session)!;
+      const park = getSelectedPark(session);
 
-    let message = format(strings.fastPass.all.notSupported, park);
-
-    if (supportsFastPass(park) === true) {
-      let ridesInfo = await getRidesInfo(park);
-
-      if (ridesInfo !== null) {
-        message = strings.fastPass.all.message;
-
-        ridesInfo = ridesInfo.filter(ri => ri.fastPass === true);
-
-        ridesInfo.forEach(ri => {
-          message += `* ${ri.name}\n\n`;
-        });
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
       } else {
-        message = strings.fastPass.common.noData;
-      }
-    }
+        const result: IDialogResult<string> = {
+          response: park
+        };
 
-    session.endDialog(message);
-  })
+        skip!(result);
+      }
+    },
+    async (session, result: IDialogResult<string>) => {
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
+
+      let message = format(strings.fastPass.all.notSupported, park);
+
+      if (supportsFastPass(park) === true) {
+        let ridesInfo = await getRidesInfo(park);
+
+        if (ridesInfo !== null) {
+          message = strings.fastPass.all.message;
+
+          ridesInfo = ridesInfo.filter(ri => ri.fastPass === true);
+
+          ridesInfo.forEach(ri => {
+            message += `* ${ri.name}\n\n`;
+          });
+        } else {
+          message = strings.fastPass.common.noData;
+        }
+      }
+
+      session.endDialog(message);
+    }
+  ])
   .triggerAction({
     // LUIS intent
     matches: "fastPass:all"
@@ -43,16 +59,30 @@ lib
 
 lib
   .dialog("ride", [
-    async (session, args, next) => {
+    (session, result, skip) => {
       session.sendTyping();
 
-      const rideNameEntity: IEntity | null = EntityRecognizer.findEntity(
-        args.intent.entities,
+      session.dialogData.rideNameEntity = EntityRecognizer.findEntity(
+        result.intent.entities,
         "rideName"
       );
 
-      // Removing undefined since at this point it will be set.
-      const park = getSelectedPark(session)!;
+      const park = getSelectedPark(session);
+
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const dialogResult: IDialogResult<string> = {
+          response: park
+        };
+
+        skip!(dialogResult);
+      }
+    },
+    async (session, result: IDialogResult<string>, skip) => {
+      const rideNameEntity: IEntity | null = session.dialogData.rideNameEntity;
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
 
       const ridesInfo = await getRidesInfo(park);
 
@@ -73,7 +103,7 @@ lib
           };
 
           // Removing undefined as we do have a next step.
-          next!(dialogResult);
+          skip!(dialogResult);
         } else {
           const whichRideArgs: IWhichRideArgs = {
             rideNames
@@ -86,12 +116,12 @@ lib
       }
     },
     (session, result: IDialogResult<string>) => {
-      const parkName = result.response;
+      const rideName = result.response;
 
       const ridesInfo: IRideInfo[] = session.dialogData.ridesInfo;
 
       // Removing undefined as the park name comes from this list.
-      const rideInfo = ridesInfo.find(ri => ri.name === parkName)!;
+      const rideInfo = ridesInfo.find(ri => ri.name === rideName)!;
 
       const message = format(
         rideInfo.fastPass === true
