@@ -35,7 +35,6 @@ lib.dialog("whichPark", [
   }
 ]);
 
-// TODO Decide to remove?
 lib.dialog("stillInterestedInPark", [
   session => {
     const parkName = getSelectedPark(session);
