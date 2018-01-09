@@ -31,29 +31,43 @@ lib.dialog("whichRide", [
   }
 ]);
 
-// TODO refactor below to use common function
-
 lib
-  .dialog("all", async session => {
-    session.sendTyping();
+  .dialog("all", [
+    // tslint:disable-next-line:variable-name
+    (session, _result, skip) => {
+      session.sendTyping();
 
-    // Removing undefined since at this point it will be set.
-    const park = getSelectedPark(session)!;
+      const park = getSelectedPark(session);
 
-    const ridesInfo = await getRidesInfo(park);
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const result: IDialogResult<string> = {
+          response: park
+        };
 
-    let message = strings.rides.common.noData;
+        skip!(result);
+      }
+    },
+    async (session, result: IDialogResult<string>) => {
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
 
-    if (ridesInfo !== null) {
-      message = strings.rides.all.message;
+      const ridesInfo = await getRidesInfo(park);
 
-      ridesInfo.forEach(ri => {
-        message += `* ${ri.name}\n\n`;
-      });
+      let message = strings.rides.common.noData;
+
+      if (ridesInfo !== null) {
+        message = strings.rides.all.message;
+
+        ridesInfo.forEach(ri => {
+          message += `* ${ri.name}\n\n`;
+        });
+      }
+
+      session.endDialog(message);
     }
-
-    session.endDialog(message);
-  })
+  ])
   .triggerAction({
     // LUIS intent
     matches: "rides:all"

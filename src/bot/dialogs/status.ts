@@ -1,6 +1,6 @@
 import { EntityRecognizer, IDialogResult, IEntity, Library } from "botbuilder";
 import { format } from "util";
-import { IRideInfo, RideStatus } from "../../models";
+import { IRideInfo, Status } from "../../models";
 import { getRidesInfo } from "../../services/parks";
 import strings from "../../strings";
 import { getClosestMatch } from "../../utils";
@@ -10,40 +10,55 @@ import { IWhichRideArgs } from "./rides";
 const lib = new Library("status");
 
 lib
-  .dialog("all", async (session, args) => {
-    session.sendTyping();
+  .dialog("all", [
+    (session, result, skip) => {
+      session.sendTyping();
 
-    const rideStatusEntity: IEntity = EntityRecognizer.findEntity(
-      args.intent.entities,
-      "rideStatus"
-    );
-    const status: RideStatus = rideStatusEntity.entity;
+      session.dialogData.statusEntity = EntityRecognizer.findEntity(
+        result.intent.entities,
+        "status"
+      );
 
-    // Removing undefined since at this point it will be set.
-    const park = getSelectedPark(session)!;
+      const park = getSelectedPark(session);
 
-    let ridesInfo = await getRidesInfo(park);
-
-    let message = strings.status.common.noData;
-
-    if (ridesInfo !== null) {
-      let isRunning = true;
-      if (status === RideStatus.Open) {
-        message = strings.status.all.openMessage;
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
       } else {
-        message = strings.status.all.closedMessage;
-        isRunning = false;
+        const dialogResult: IDialogResult<string> = {
+          response: park
+        };
+
+        skip!(dialogResult);
+      }
+    },
+    async (session, result) => {
+      const status: Status = session.dialogData.statusEntity.entity;
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
+
+      let ridesInfo = await getRidesInfo(park);
+
+      let message = strings.status.common.noData;
+
+      if (ridesInfo !== null) {
+        let isRunning = true;
+        if (status === Status.Open) {
+          message = strings.status.all.openMessage;
+        } else {
+          message = strings.status.all.closedMessage;
+          isRunning = false;
+        }
+
+        ridesInfo = ridesInfo.filter(ri => ri.isRunning === isRunning);
+
+        ridesInfo.forEach(ri => {
+          message += `* ${ri.name}\n\n`;
+        });
       }
 
-      ridesInfo = ridesInfo.filter(ri => ri.isRunning === isRunning);
-
-      ridesInfo.forEach(ri => {
-        message += `* ${ri.name}\n\n`;
-      });
+      session.endDialog(message);
     }
-
-    session.endDialog(message);
-  })
+  ])
   .triggerAction({
     // LUIS intent
     matches: "status:all"
@@ -51,22 +66,34 @@ lib
 
 lib
   .dialog("ride", [
-    async (session, args, next) => {
+    (session, result, skip) => {
       session.sendTyping();
 
-      const rideStatusEntity: IEntity = EntityRecognizer.findEntity(
-        args.intent.entities,
-        "rideStatus"
+      session.dialogData.statusEntity = EntityRecognizer.findEntity(
+        result.intent.entities,
+        "status"
       );
-      const rideNameEntity: IEntity | null = EntityRecognizer.findEntity(
-        args.intent.entities,
+      session.dialogData.rideNameEntity = EntityRecognizer.findEntity(
+        result.intent.entities,
         "rideName"
       );
 
-      session.dialogData.status = rideStatusEntity.entity;
+      const park = getSelectedPark(session);
 
-      // Removing undefined since at this point it will be set.
-      const park = getSelectedPark(session)!;
+      if (park === undefined) {
+        session.beginDialog("parks:whichPark");
+      } else {
+        const dialogResult: IDialogResult<string> = {
+          response: park
+        };
+
+        skip!(dialogResult);
+      }
+    },
+    async (session, result, skip) => {
+      const rideNameEntity: IEntity | null = session.dialogData.rideNameEntity;
+      // Removing undefined as we have either obtained this from the user or from storage.
+      const park = result.response!;
 
       const ridesInfo = await getRidesInfo(park);
 
@@ -87,7 +114,7 @@ lib
           };
 
           // Removing undefined as we do have a next step.
-          next!(dialogResult);
+          skip!(dialogResult);
         } else {
           const whichRideArgs: IWhichRideArgs = {
             rideNames
@@ -103,14 +130,14 @@ lib
       const parkName = result.response;
 
       const ridesInfo: IRideInfo[] = session.dialogData.ridesInfo;
-      const status: RideStatus = session.dialogData.status;
+      const status: Status = session.dialogData.statusEntity.entity;
 
       // Removing undefined as the park name comes from this list.
       const rideInfo = ridesInfo.find(ri => ri.name === parkName)!;
 
       let yesNo = "";
 
-      if (status === RideStatus.Open) {
+      if (status === Status.Open) {
         yesNo = rideInfo.isRunning
           ? strings.status.ride.yes
           : strings.status.ride.no;

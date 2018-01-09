@@ -1,6 +1,6 @@
 import { IDialogResult, Library, Session } from "botbuilder";
+import { format } from "util";
 import strings from "../../strings";
-import { setSelectedPark } from "../data/userData";
 
 const lib = new Library("global");
 
@@ -15,17 +15,13 @@ lib
 
 lib
   .dialog("switchPark", [
-    // TODO See if can reduce duplication. Copied from default.
     (session: Session) => {
       session.beginDialog("parks:whichPark");
     },
-    (session: Session, results: IDialogResult<string>) => {
-      // Removing undefined as we know that if reach here then a park has been selected.
-      const park = results.response!;
-
-      setSelectedPark(session, park);
-
-      session.beginDialog("parks:parkIntro");
+    (session: Session, result: IDialogResult<string>) => {
+      session.endDialog(
+        format(strings.global.switchPark.message, result.response)
+      );
     }
   ])
   .triggerAction({

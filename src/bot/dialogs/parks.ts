@@ -9,7 +9,7 @@ import {
 import { format } from "util";
 import { parkNames } from "../../services/parks";
 import strings from "../../strings";
-import { getSelectedPark } from "../data/userData";
+import { getSelectedPark, setSelectedPark } from "../data/userData";
 
 const lib = new Library("parks");
 
@@ -24,6 +24,8 @@ lib.dialog("whichPark", [
   (session, result: IPromptChoiceResult) => {
     // Removing undefined as choice prompt will ensure value.
     const chosenPark = result.response!.entity;
+
+    setSelectedPark(session, chosenPark);
 
     const dialogResult: IDialogResult<string> = {
       response: chosenPark
@@ -54,15 +56,4 @@ lib.dialog("stillInterestedInPark", [
     }
   }
 ]);
-
-lib.dialog("parkIntro", [
-  session => {
-    const parkName = getSelectedPark(session);
-
-    session.send(strings.parks.parkIntro.message1 + parkName);
-
-    session.endDialog(strings.parks.parkIntro.message2);
-  }
-]);
-
 export default lib;

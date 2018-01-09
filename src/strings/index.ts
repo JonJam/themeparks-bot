@@ -1,4 +1,13 @@
 export default {
+  default: {
+    message:
+      "%s \n\n Sorry, I did not understand. Type 'help' if you need assistance.",
+    randomMessage: [
+      "Ah ah ah, you didn't say the magic word.",
+      "I'm sorry, Dave. I'm afraid I can't do that.",
+      "Computer says no."
+    ]
+  },
   fastPass: {
     all: {
       message: "The rides with fast pass are:\n\n",
@@ -15,23 +24,20 @@ export default {
   global: {
     help: {
       message:
-        "You can ask me things about:\n\nWait times\n\n * What are the wait times?\n\n * What is the wait time for The Incredible Hulk?\n\n * What ride has the longest/shortest wait?\n\n Rides\n\n * What rides are there?\n\n * What rides are open/closed?\n\n * Is Space Mountain open/closed?\n\n * What rides have fastpass?\n\n * Does Revenge of the Mummy have fastpass?\n\n Park\n\n * When does it open/close?\n\n * Change park"
+        "You can ask me things about:\n\nWait times\n\n * What are the wait times?\n\n * What is the wait time for The Incredible Hulk?\n\n * What ride has the longest/shortest wait?\n\n Rides\n\n * What rides are there?\n\n * What rides are open/closed?\n\n * Is Space Mountain open/closed?\n\n * What rides have fastpass?\n\n * Does Revenge of the Mummy have fastpass?\n\n Park\n\n * When does it open/close?\n\n * Select park * Change park"
+    },
+    switchPark: {
+      message: "You selected: %s"
     }
   },
   greetings: {
-    goodbye: {
-      message: "Bye."
+    firstRun: {
+      message:
+        "Hi! I'm Theme Park Bot. Try asking me things like 'select park', 'what are the wait times?' or 'help' for more assistance."
     },
     hello: {
-      welcomeBack: "Welcome back!",
-      welcomeNew: "Hi I am Theme Park Bot."
-    },
-    none: {
-      messages: [
-        "Ah ah ah, you didn't say the magic word.",
-        "I'm sorry, Dave. I'm afraid I can't do that.",
-        "Computer says no."
-      ]
+      message: "Welcome back!",
+      selected: "You selected: %s"
     }
   },
   operatingHours: {
@@ -46,10 +52,6 @@ export default {
     }
   },
   parks: {
-    parkIntro: {
-      message1: "You selected: ",
-      message2: "Try asking questions about rides and operating hours."
-    },
     stillInterestedInPark: {
       prompt: "Are you still interested in %s?"
     },
