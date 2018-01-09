@@ -1,5 +1,5 @@
-import debug = require("debug");
-import moment = require("moment-timezone");
+import * as debug from "debug";
+import * as moment from "moment-timezone";
 import { AllParks, Park, ScheduleData } from "themeparks";
 import { IParkOperatingHours, IRideInfo, IRideWaitTime } from "../models";
 
