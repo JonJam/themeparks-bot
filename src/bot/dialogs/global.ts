@@ -1,6 +1,6 @@
 import { IDialogResult, Library, Session } from "botbuilder";
-import { setSelectedPark } from "../data/userData";
 import strings from "../../strings";
+import { setSelectedPark } from "../data/userData";
 
 const lib = new Library("global");
 
