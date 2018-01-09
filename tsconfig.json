@@ -15,7 +15,11 @@
     "noUnusedParameters": true,
     "noEmitOnError": true,
     "removeComments": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "themeparks":["src/@types/themeparks/types/themeparks/index.d.ts"]
+    }
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

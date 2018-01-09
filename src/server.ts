@@ -1,6 +1,7 @@
-import debug = require("debug");
+import * as debug from "debug";
 import { createServer } from "http";
 import app from "./app";
+import { port } from "./settings";
 
 // Using debug per best practise: https://expressjs.com/en/advanced/best-practice-performance.html#do-logging-correctly
 const log = debug("server");
@@ -8,8 +9,6 @@ const log = debug("server");
 /**
  * Get port from environment and store in Express.
  */
-
-const port = normalizePort(process.env.PORT || "8080");
 app.set("port", port);
 
 // Create HTTP server.
@@ -23,26 +22,6 @@ const server = createServer(app as any);
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val: string) {
-  const parsedPort = parseInt(val, 10);
-
-  if (isNaN(parsedPort)) {
-    // named pipe
-    return val;
-  }
-
-  if (parsedPort >= 0) {
-    // port number
-    return parsedPort;
-  }
-
-  return false;
-}
 
 /**
  * Event listener for HTTP server "error" event.

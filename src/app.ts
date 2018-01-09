@@ -1,12 +1,10 @@
-import { UniversalBot } from "botbuilder";
 import compression = require("compression");
 import express = require("express");
 import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import helmet = require("helmet");
-import defaultDialog from "./dialogs/default";
+import connector from "./bot";
 import StatusError from "./errors/StatusError";
-import chatConnector from "./routes/messages";
 
 const app = express();
 
@@ -17,22 +15,18 @@ app.use(helmet());
 app.use(compression());
 
 // Routes
-app.post("/api/messages", chatConnector.listen());
-
-// tslint:disable:no-unused-expression
-new UniversalBot(chatConnector, defaultDialog);
+app.post("/api/messages", connector.listen());
 
 // 404 - error handler
-// tslint:disable:variable-name
-app.use(
-  (
-    _req: express.Request,
-    _res: express.Response,
-    next: express.NextFunction
-  ) => {
-    next(new StatusError("Not Found", 404));
-  }
-);
+app.use((
+  // tslint:disable-next-line:variable-name
+  _req: express.Request,
+  // tslint:disable-next-line:variable-name
+  _res: express.Response,
+  next: express.NextFunction
+) => {
+  next(new StatusError("Not Found", 404));
+});
 
 // 500 - error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
