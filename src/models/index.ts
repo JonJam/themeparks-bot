@@ -1,4 +1,4 @@
-import moment = require("moment-timezone");
+import * as moment from "moment-timezone";
 
 interface IAdditionalParkOperatingHours {
   opening: moment.Moment;

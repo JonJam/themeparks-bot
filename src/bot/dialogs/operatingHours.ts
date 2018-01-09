@@ -1,5 +1,5 @@
 import { EntityRecognizer, IEntity, Library } from "botbuilder";
-import moment = require("moment-timezone");
+import * as moment from "moment-timezone";
 import { format } from "util";
 import { getOperatingHours } from "../../services/parks";
 import strings from "../../strings";

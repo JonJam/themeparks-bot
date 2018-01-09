@@ -1,4 +1,4 @@
-import debug = require("debug");
+import * as debug from "debug";
 import { createServer } from "http";
 import app from "./app";
 import { port } from "./settings";
