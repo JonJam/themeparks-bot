@@ -28,11 +28,11 @@ lib.dialog("goodbye", (session: Session) => {
 lib
   .dialog("none", (session: Session) => {
     const randomIndex = Math.floor(
-      Math.random() * strings.greetings.none.messages.length
+      Math.random() * strings.greetings.none.randomMessage.length
     );
-    const message = strings.greetings.none.messages[randomIndex];
+    session.send(strings.greetings.none.randomMessage[randomIndex]);
 
-    session.endDialog(message);
+    session.endDialog(strings.greetings.none.askForHelp);
   })
   .triggerAction({
     // LUIS intent

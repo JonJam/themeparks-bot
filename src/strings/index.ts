@@ -27,11 +27,13 @@ export default {
       welcomeNew: "Hi I am Theme Park Bot."
     },
     none: {
-      messages: [
+      randomMessage: [
         "Ah ah ah, you didn't say the magic word.",
         "I'm sorry, Dave. I'm afraid I can't do that.",
         "Computer says no."
-      ]
+      ],
+      askForHelp:
+        "Sorry, I did not understand. Type 'help' if you need assistance."
     }
   },
   operatingHours: {
