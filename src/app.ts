@@ -1,8 +1,8 @@
-import compression = require("compression");
-import express = require("express");
+import * as compression from "compression";
+import * as express from "express";
 import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
-import helmet = require("helmet");
+import * as helmet from "helmet";
 import connector from "./bot";
 import StatusError from "./errors/StatusError";
 
