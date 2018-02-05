@@ -9,9 +9,10 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
-  type: LoadBalancer
+  # Change to loadBalancer for non minikube
+  type: NodePort
 ---
-apiVersion: apps/v1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: themeparks-bot-deployment
@@ -30,7 +31,7 @@ spec:
     spec:
       containers:
       - name: themeparks-bot
-        image: themeparks-bot:0.0.1
+        image: themeparks-bot:0.0.2
         ports:
         - containerPort: 8080
         env:
@@ -49,3 +50,13 @@ spec:
             secretKeyRef:
               name: themeparks-bot-secret
               key: STORAGE_ACCOUNT_KEY
+        - name: MICROSOFT_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: themeparks-bot-secret
+              key: MICROSOFT_APP_ID
+        - name: MICROSOFT_APP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: themeparks-bot-secret
+              key: MICROSOFT_APP_PASSWORD
