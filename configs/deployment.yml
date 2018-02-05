@@ -9,7 +9,7 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
-  # Change to loadBalancer for non minikube
+  # TODO Change to loadBalancer for non minikube
   type: NodePort
 ---
 apiVersion: apps/v1beta2
@@ -19,8 +19,7 @@ metadata:
   labels:
     app: themeparks-bot
 spec:
-  # TODO Change to 3
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: themeparks-bot
@@ -34,6 +33,13 @@ spec:
         image: themeparks-bot:0.0.2
         ports:
         - containerPort: 8080
+        resources:
+          requests:
+            memory: "75Mi"
+            cpu: "15m"
+          limits:
+            memory: "140Mi"
+            cpu: "30m"
         env:
         - name: LUIS_APP_URL
           valueFrom:
