@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: themeparks-bot
-annotations:
-  "description": "Service for themeparks-bot"
+  annotations:
+    description: "Service for themeparks-bot"
 spec:
   selector:
     app: themeparks-bot
@@ -19,8 +19,8 @@ metadata:
   name: themeparks-bot-deployment
   labels:
     app: themeparks-bot
-annotations:
-  "description": "Deployment for themeparks-bot"
+  annotations:
+    description: "Deployment for themeparks-bot"
 spec:
   replicas: 3
   selector:
@@ -30,8 +30,8 @@ spec:
     metadata:
       labels:
         app: themeparks-bot
-    annotations:
-      "description": "Pod for themeparks-bot"
+      annotations:
+        description: "Pod for themeparks-bot"
     spec:
       containers:
       - name: themeparks-bot
@@ -71,5 +71,5 @@ spec:
             secretKeyRef:
               name: themeparks-bot-secret
               key: MICROSOFT_APP_PASSWORD
-      revisionHistoryLimit: 2
-      progressDeadlineSeconds: 300
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 300
