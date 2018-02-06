@@ -35,6 +35,7 @@ spec:
     spec:
       containers:
       - name: themeparks-bot
+        # TODO Remove this hardcoded image
         image: themeparks-bot:0.0.1
         ports:
         - containerPort: 8080
