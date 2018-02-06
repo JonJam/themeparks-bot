@@ -1,9 +1,13 @@
 .vscode
+k8s
 node_modules
 src
 .editorconfig
+.env
 .gitignore
+.gitmodules
 .nsprc
+docker-compose.yml
 npm-debug.log
 README.md
 tsconfig.json
