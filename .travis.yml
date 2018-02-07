@@ -8,8 +8,9 @@ stages:
 jobs:
   include:
     - stage: build
-      before_script: if [[ ! $PWD/ = "/home/travis/build/JonJam/themeparks-bot" ]]; then cd "/home/travis/build/JonJam/themeparks-bot"; fi
-      install: yarn install
+      before_script:
+      - if [[ ! $PWD/ = "/home/travis/build/JonJam/themeparks-bot" ]]; then cd "/home/travis/build/JonJam/themeparks-bot"; fi
+      - yarn install
       script: yarn build
       if: branch = master
       after_success:
