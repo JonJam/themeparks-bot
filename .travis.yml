@@ -17,5 +17,6 @@ jobs:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       - docker build -t themeparks-bot .
       - docker images
-      - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:latest $DOCKER_USERNAME/themeparks-bot:0.0.$TRAVIS_BUILD_NUMBER
+      - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:latest
+      - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:0.0.$TRAVIS_BUILD_NUMBER
       - docker push $DOCKER_USERNAME/themeparks-bot
