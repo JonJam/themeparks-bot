@@ -8,5 +8,13 @@ stages:
 jobs:
   include:
     - stage: build
-      before_script: if [[ ! $PWD/ = "/build/JonJam/themeparks-bot" ]]; then cd "/build/JonJam/themeparks-bot"; fi
+      before_script: if [[ ! $PWD/ = "/home/travis/build/JonJam/themeparks-bot" ]]; then cd "/home/travis/build/JonJam/themeparks-bot"; fi
+      install: yarn install
       script: yarn build
+      if: branch = master
+      after_success:
+      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+      - docker build -t themeparks-bot .
+      - docker images
+      - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:latest $DOCKER_USERNAME/themeparks-bot:0.0.$TRAVIS_BUILD_NUMBER
+      - docker push $DOCKER_USERNAME/themeparks-bot
