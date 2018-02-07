@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+ - "lts/*"
+
+stages:
+  - build
+
+jobs:
+  include:
+    - stage: build
+      script: npm build
+
+cache: yarn
