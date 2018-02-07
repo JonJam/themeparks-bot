@@ -1,6 +1,6 @@
 language: node_js
-node_js:
- - "lts/*"
+node_js: "lts/*"
+cache: yarn
 
 stages:
   - build
@@ -8,8 +8,5 @@ stages:
 jobs:
   include:
     - stage: build
-      script:
-      - yarn run build
-      - echo $TRAVIS_BUILD_ID $TRAVIS_BUILD_NUMBER
-
-cache: yarn
+      before_script: if [[ ! $PWD/ = "/build/JonJam/themeparks-bot" ]]; then cd "/build/JonJam/themeparks-bot"; fi
+      script: yarn build
