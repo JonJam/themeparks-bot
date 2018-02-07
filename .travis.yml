@@ -14,7 +14,7 @@ jobs:
       script: yarn build
       if: branch = master
       after_success:
-      - docker login -u="$DOCKER_EMAILADDRESS" -p="$DOCKER_PASSWORD"
+      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       - docker build -t themeparks-bot .
       - docker images
       - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:latest
