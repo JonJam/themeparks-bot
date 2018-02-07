@@ -8,6 +8,8 @@ stages:
 jobs:
   include:
     - stage: build
-      script: yarn build
+      script:
+      - yarn run build
+      - echo $TRAVIS_BUILD_ID $TRAVIS_BUILD_NUMBER
 
 cache: yarn
