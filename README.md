@@ -1,4 +1,4 @@
-# themeparks-bot
+# themeparks-bot [![Build Status](https://travis-ci.org/JonJam/themeparks-bot.svg?branch=master)](https://travis-ci.org/JonJam/themeparks-bot)
 
 Below are the resources used to create this project.
 
