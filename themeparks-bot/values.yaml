@@ -15,3 +15,11 @@ resources:
 service:
   type: LoadBalancer
   port: 80
+
+# These should be specified using set.
+secret:
+  luisAppUrl:
+  storageAccountName:
+  storageAccountKey:
+  microsoftAppId:
+  microsoftAppPassword:

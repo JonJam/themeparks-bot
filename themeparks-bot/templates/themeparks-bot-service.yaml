@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    description: "Service for {{ template 'themeparks-bot.name' }}"
+    description: "Service for {{ template "themeparks-bot.name" }}"
 spec:
   selector:
     app: {{ template "themeparks-bot.name" . }}

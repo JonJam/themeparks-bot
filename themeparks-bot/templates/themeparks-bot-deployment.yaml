@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    description: "Deployment for {{ template 'themeparks-bot.name' }}"
+    description: "Deployment for {{ template "themeparks-bot.name" }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -21,8 +21,8 @@ spec:
         app: {{ template "themeparks-bot.name" . }}
         release: {{ .Release.Name }}
       annotations:
-        description: "Pod for {{ template 'themeparks-bot.name' }}"
-        checksum/config: {{ include (print $.Template.BasePath "/themepark-bot-secret.yaml") . | sha256sum }}
+        description: "Pod for {{ template "themeparks-bot.name" }}"
+        checksum/config: {{ include (print $.Template.BasePath "/themeparks-bot-secret.yaml") . | sha256sum }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
