@@ -1,27 +1,27 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "themeparks-bot.fullname" . }}
+  name: {{ include "themeparks-bot.fullname" . }}
   labels:
-    app: {{ template "themeparks-bot.name" . }}
-    chart: {{ template "themeparks-bot.chart" . }}
+    app: {{ include "themeparks-bot.name" . }}
+    chart: {{ include "themeparks-bot.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    description: "Deployment for {{ template "themeparks-bot.name" }}"
+    description: "Deployment for {{ include "themeparks-bot.name" . }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "themeparks-bot.name" . }}
+      app: {{ include "themeparks-bot.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "themeparks-bot.name" . }}
+        app: {{ include "themeparks-bot.name" . }}
         release: {{ .Release.Name }}
       annotations:
-        description: "Pod for {{ template "themeparks-bot.name" }}"
+        description: "Pod for {{ include "themeparks-bot.name" . }}"
         checksum/config: {{ include (print $.Template.BasePath "/themeparks-bot-secret.yaml") . | sha256sum }}
     spec:
       containers:
@@ -36,27 +36,27 @@ spec:
           - name: LUIS_APP_URL
             valueFrom:
               secretKeyRef:
-                name: {{ template "themeparks-bot.fullname" . }}
+                name: {{ include "themeparks-bot.fullname" . }}
                 key: LUIS_APP_URL
           - name: STORAGE_ACCOUNT_NAME
             valueFrom:
               secretKeyRef:
-                name: {{ template "themeparks-bot.fullname" . }}
+                name: {{ include "themeparks-bot.fullname" . }}
                 key: STORAGE_ACCOUNT_NAME
           - name: STORAGE_ACCOUNT_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ template "themeparks-bot.fullname" . }}
+                name: {{ include "themeparks-bot.fullname" . }}
                 key: STORAGE_ACCOUNT_KEY
           - name: MICROSOFT_APP_ID
             valueFrom:
               secretKeyRef:
-                name: {{ template "themeparks-bot.fullname" . }}
+                name: {{ include "themeparks-bot.fullname" . }}
                 key: MICROSOFT_APP_ID
           - name: MICROSOFT_APP_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "themeparks-bot.fullname" . }}
+                name: {{ include "themeparks-bot.fullname" . }}
               key: MICROSOFT_APP_PASSWORD
   revisionHistoryLimit: 2
   progressDeadlineSeconds: 300

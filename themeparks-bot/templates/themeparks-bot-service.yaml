@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "themeparks-bot.fullname" . }}
+  name: {{ include "themeparks-bot.fullname" . }}
   labels:
-    app: {{ template "themeparks-bot.name" . }}
-    chart: {{ template "themeparks-bot.chart" . }}
+    app: {{ include "themeparks-bot.name" . }}
+    chart: {{ include "themeparks-bot.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    description: "Service for {{ template "themeparks-bot.name" }}"
+    description: "Service for {{ include "themeparks-bot.name" . }}"
 spec:
   selector:
-    app: {{ template "themeparks-bot.name" . }}
+    app: {{ include "themeparks-bot.name" . }}
     release: {{ .Release.Name }}
   type: {{ .Values.service.type }}
   ports:

@@ -6,11 +6,11 @@ image:
 
 resources:
   requests:
-    memory: "75Mi"
-    cpu: "15m"
+    memory: 75Mi
+    cpu: 15m
   limits:
-    memory: "140Mi"
-    cpu: "30m"
+    memory: 140Mi
+    cpu: 30m
 
 service:
   type: LoadBalancer
