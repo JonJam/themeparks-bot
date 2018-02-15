@@ -1,0 +1,17 @@
+# Default values for themeparks-bot.
+replicaCount: 3
+
+image:
+  tag: 0.0.1
+
+resources:
+  requests:
+    memory: "75Mi"
+    cpu: "15m"
+  limits:
+    memory: "140Mi"
+    cpu: "30m"
+
+service:
+  type: LoadBalancer
+  port: 80

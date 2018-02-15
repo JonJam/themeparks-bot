@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "themeparks-bot.fullname" . }}
+  labels:
+    app: {{ template "themeparks-bot.name" . }}
+    chart: {{ template "themeparks-bot.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    description: "Service for {{ template 'themeparks-bot.name' }}"
+spec:
+  selector:
+    app: {{ template "themeparks-bot.name" . }}
+    release: {{ .Release.Name }}
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      name: http
