@@ -1,3 +1,4 @@
 name: themeparks-bot
 version: 0.0.1
 description: "Chat bot for theme park information."
+tillerVersion: ">=2.4.0"
