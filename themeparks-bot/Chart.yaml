@@ -1,6 +1,3 @@
-# TODO Update this
-apiVersion: v1
-appVersion: "1.0"
-description: "Chat bot for theme park information."
 name: themeparks-bot
 version: 0.0.1
+description: "Chat bot for theme park information."
