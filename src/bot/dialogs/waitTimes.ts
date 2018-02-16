@@ -70,6 +70,8 @@ lib
       }
     },
     async (session, result: IDialogResult<string>) => {
+      session.sendTyping();
+
       function allMessage(waitTimes: IRideWaitTime[]) {
         let message = strings.waitTimes.all.message;
 
@@ -110,6 +112,8 @@ lib
       }
     },
     async (session, result: IDialogResult<string>) => {
+      session.sendTyping();
+
       function shortestMessage(waitTimes: IRideWaitTime[]) {
         const runningRides = waitTimes.filter(wt => wt.isRunning === true);
 
@@ -158,6 +162,8 @@ lib
     },
 
     async (session, result) => {
+      session.sendTyping();
+
       function longestMessage(waitTimes: IRideWaitTime[]) {
         const runningRides = waitTimes.filter(wt => wt.isRunning === true);
 
@@ -212,6 +218,8 @@ lib
     },
 
     async (session, result, skip) => {
+      session.sendTyping();
+
       // Removing undefined as we have either obtained this from the user or from storage.
       const park = result.response!;
       const rideNameEntity: IEntity | null = session.dialogData.rideNameEntity;

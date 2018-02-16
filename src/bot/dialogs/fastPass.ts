@@ -28,6 +28,8 @@ lib
       }
     },
     async (session, result: IDialogResult<string>) => {
+      session.sendTyping();
+
       // Removing undefined as we have either obtained this from the user or from storage.
       const park = result.response!;
 
@@ -80,6 +82,8 @@ lib
       }
     },
     async (session, result: IDialogResult<string>, skip) => {
+      session.sendTyping();
+
       const rideNameEntity: IEntity | null = session.dialogData.rideNameEntity;
       // Removing undefined as we have either obtained this from the user or from storage.
       const park = result.response!;

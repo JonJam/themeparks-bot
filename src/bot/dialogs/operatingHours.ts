@@ -30,6 +30,8 @@ lib
       }
     },
     async (session, result: IDialogResult<string>) => {
+      session.sendTyping();
+
       const dateEntity: IEntity | null = session.dialogData.dateEntity;
       // Removing undefined as we have either obtained this from the user or from storage.
       const park = result.response!;
