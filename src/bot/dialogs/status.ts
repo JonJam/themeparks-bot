@@ -32,6 +32,8 @@ lib
       }
     },
     async (session, result) => {
+      session.sendTyping();
+
       const status: Status = session.dialogData.statusEntity.entity;
       // Removing undefined as we have either obtained this from the user or from storage.
       const park = result.response!;
@@ -91,6 +93,8 @@ lib
       }
     },
     async (session, result, skip) => {
+      session.sendTyping();
+
       const rideNameEntity: IEntity | null = session.dialogData.rideNameEntity;
       // Removing undefined as we have either obtained this from the user or from storage.
       const park = result.response!;

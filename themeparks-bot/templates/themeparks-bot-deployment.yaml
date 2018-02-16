@@ -1,0 +1,62 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "themeparks-bot.fullname" . }}
+  labels:
+    app: {{ include "themeparks-bot.name" . }}
+    chart: {{ include "themeparks-bot.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    description: "Deployment for {{ include "themeparks-bot.name" . }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "themeparks-bot.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "themeparks-bot.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        description: "Pod for {{ include "themeparks-bot.name" . }}"
+        checksum/config: {{ include (print $.Template.BasePath "/themeparks-bot-secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "themeparks-bot:{{ .Values.imageTag }}"
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+          - name: LUIS_APP_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "themeparks-bot.fullname" . }}
+                key: LUIS_APP_URL
+          - name: STORAGE_ACCOUNT_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "themeparks-bot.fullname" . }}
+                key: STORAGE_ACCOUNT_NAME
+          - name: STORAGE_ACCOUNT_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "themeparks-bot.fullname" . }}
+                key: STORAGE_ACCOUNT_KEY
+          - name: MICROSOFT_APP_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "themeparks-bot.fullname" . }}
+                key: MICROSOFT_APP_ID
+          - name: MICROSOFT_APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "themeparks-bot.fullname" . }}
+                key: MICROSOFT_APP_PASSWORD
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 300
