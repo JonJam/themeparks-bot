@@ -22,7 +22,7 @@
     "botbuilder-azure": "^3.0.4",
     "compression": "^1.7.1",
     "debug": "^3.1.0",
-    "express": "~4.15.5",
+    "express": "^4.15.5",
     "fuse.js": "^3.2.0",
     "helmet": "^3.9.0",
     "moment-timezone": "^0.5.14",
