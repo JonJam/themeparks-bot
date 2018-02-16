@@ -2,6 +2,11 @@ language: node_js
 node_js: "lts/*"
 cache: yarn
 
+before_install:
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
+  - chmod 700 get_helm.sh
+  - sudo ./get_helm.sh
+
 stages:
   - build
 
@@ -11,7 +16,9 @@ jobs:
       before_script:
       - if [[ ! $PWD/ = "/home/travis/build/JonJam/themeparks-bot" ]]; then cd "/home/travis/build/JonJam/themeparks-bot"; fi
       - yarn install
-      script: yarn build
+      script:
+      - yarn build
+      - helm lint --set secret.luisAppUrl=$LUIS_APP_URL,secret.storageAccountName=$STORAGE_ACCOUNT_NAME,secret.storageAccountKey=$STORAGE_ACCOUNT_KEY,secret.microsoftAppId=$MICROSOFT_APP_ID,secret.microsoftAppPassword=$MICROSOFT_APP_PASSWORD ./themeparks-bot
       if: branch = master
       after_success:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
