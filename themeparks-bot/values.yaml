@@ -1,9 +1,10 @@
-# Default values for themeparks-bot.
+# replicaCount is the number of replicas for the themeparks-bot container.
 replicaCount: 3
 
-image:
-  tag: 0.0.1
+# imageTag is the tag for the themeparks-bot container image.
+imageTag: 0.0.1
 
+# resources is the requests and limits for the themeparks-bot container.
 resources:
   requests:
     memory: 75Mi
@@ -12,16 +13,15 @@ resources:
     memory: 140Mi
     cpu: 30m
 
+# service is the type and HTTP port for the themeparks-bot service.
 service:
   type: LoadBalancer
   port: 80
 
-# These should be specified using set.
+# secret is the required secrets for the themeparks-bot container.
 secret:
   luisAppUrl:
   storageAccountName:
   storageAccountKey:
   microsoftAppId:
   microsoftAppPassword:
-
-  TODO comment eacb value

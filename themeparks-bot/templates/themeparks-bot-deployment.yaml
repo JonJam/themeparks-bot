@@ -26,12 +26,10 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "themeparks-bot:{{ .Values.image.tag }}"
+          image: "themeparks-bot:{{ .Values.imageTag }}"
           ports:
             - name: http
               containerPort: 8080
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
           env:
           - name: LUIS_APP_URL
             valueFrom:
@@ -57,6 +55,8 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ include "themeparks-bot.fullname" . }}
-              key: MICROSOFT_APP_PASSWORD
+                key: MICROSOFT_APP_PASSWORD
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
   revisionHistoryLimit: 2
   progressDeadlineSeconds: 300
