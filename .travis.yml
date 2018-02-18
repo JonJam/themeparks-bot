@@ -18,7 +18,7 @@ before_install:
 stages:
   - build
   - name: deploy
-    if: branch = master
+    if: branch = master AND type IN (push)
 
 jobs:
   include:
@@ -29,7 +29,7 @@ jobs:
       script:
       - yarn build
       - helm lint --set secret.luisAppUrl=$LUIS_APP_URL,secret.storageAccountName=$STORAGE_ACCOUNT_NAME,secret.storageAccountKey=$STORAGE_ACCOUNT_KEY,secret.microsoftAppId=$MICROSOFT_APP_ID,secret.microsoftAppPassword=$MICROSOFT_APP_PASSWORD ./themeparks-bot
-      if: branch = master
+      if: branch = master AND type IN (push)
       after_success:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       - docker build -t themeparks-bot .
