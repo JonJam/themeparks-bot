@@ -3,12 +3,22 @@ node_js: "lts/*"
 cache: yarn
 
 before_install:
+  - echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+  - sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893
+  - sudo apt-get -qq update
+  - sudo apt-get install -qq apt-transport-https
+  - sudo apt-get install -qq azure-cli
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
   - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
   - chmod 700 get_helm.sh
   - sudo ./get_helm.sh
 
 stages:
   - build
+  - name: deploy
+    if: branch = master AND type IN (push)
 
 jobs:
   include:
@@ -19,7 +29,7 @@ jobs:
       script:
       - yarn build
       - helm lint --set secret.luisAppUrl=$LUIS_APP_URL,secret.storageAccountName=$STORAGE_ACCOUNT_NAME,secret.storageAccountKey=$STORAGE_ACCOUNT_KEY,secret.microsoftAppId=$MICROSOFT_APP_ID,secret.microsoftAppPassword=$MICROSOFT_APP_PASSWORD ./themeparks-bot
-      if: branch = master
+      if: branch = master AND type IN (push)
       after_success:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       - docker build -t themeparks-bot .
@@ -27,3 +37,9 @@ jobs:
       - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:latest
       - docker tag themeparks-bot $DOCKER_USERNAME/themeparks-bot:0.0.$TRAVIS_BUILD_NUMBER
       - docker push $DOCKER_USERNAME/themeparks-bot
+    - stage: deploy
+      install: skip
+      script: skip
+      deploy:
+        provider: script
+        script: ./scripts/deploy.sh
