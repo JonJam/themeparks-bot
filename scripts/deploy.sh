@@ -16,4 +16,4 @@ echo "Getting credentials for cluster..."
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME
 
 echo "Installing release"
-helm upgrade --install "one-and-only" --set imageTag=0.0.$TRAVIS_BUILD_NUMBER,secret.luisAppUrl=$LUIS_APP_URL,secret.storageAccountName=$STORAGE_ACCOUNT_NAME,secret.storageAccountKey=$STORAGE_ACCOUNT_KEY,secret.microsoftAppId=$MICROSOFT_APP_ID,secret.microsoftAppPassword=$MICROSOFT_APP_PASSWORD ./themeparks-bot/
+helm upgrade --install "one-and-only" --set image.tag=0.0.$TRAVIS_BUILD_NUMBER,secret.luisAppUrl=$LUIS_APP_URL,secret.storageAccountName=$STORAGE_ACCOUNT_NAME,secret.storageAccountKey=$STORAGE_ACCOUNT_KEY,secret.microsoftAppId=$MICROSOFT_APP_ID,secret.microsoftAppPassword=$MICROSOFT_APP_PASSWORD ./themeparks-bot/
