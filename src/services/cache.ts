@@ -10,8 +10,9 @@ const redisCache = caching({
   auth_pass: redisKey,
   host: redisHost,
   port: redisPort,
-  store: redisStore,
-  tls: { servername: redisHost }
+  store: redisStore
+  // If want to use TLS then uncomment below
+  // tls: { servername: redisHost }
 });
 
 const redisClient = redisCache.store.getClient();
