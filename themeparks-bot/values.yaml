@@ -1,8 +1,11 @@
 # replicaCount is the number of replicas for the themeparks-bot container.
 replicaCount: 3
 
-# imageTag is the tag for the themeparks-bot container image.
-imageTag: 0.0.1
+image:
+  # repository is the repository for the themeparks-bot container image.
+  repository: jonjam/themeparks-bot
+  # tag is the tag for the themeparks-bot container image.
+  tag: 0.0.1
 
 # resources is the requests and limits for the themeparks-bot container.
 resources:

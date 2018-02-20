@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "jonjam/themeparks-bot:{{ .Values.imageTag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - name: http
               containerPort: 8080
@@ -56,6 +56,8 @@ spec:
               secretKeyRef:
                 name: {{ include "themeparks-bot.fullname" . }}
                 key: MICROSOFT_APP_PASSWORD
+          - name: REDIS_HOST
+            value: {{ include "redis.dns" . }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
   revisionHistoryLimit: 2

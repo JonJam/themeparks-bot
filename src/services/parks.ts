@@ -1,9 +1,13 @@
 import * as debug from "debug";
 import * as moment from "moment-timezone";
-import { AllParks, Park, ScheduleData } from "themeparks";
+import { AllParks, Park, ScheduleData, Settings } from "themeparks";
 import { IParkOperatingHours, IRideInfo, IRideWaitTime } from "../models";
+import cache from "./cache";
 
 const log = debug("services:parks");
+
+// Configuring caching for themeparks module.
+Settings.Cache = cache;
 
 // Map of theme park name to class.
 const parksMap = new Map<string, Park>(
