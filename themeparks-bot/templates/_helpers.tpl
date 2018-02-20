@@ -20,3 +20,10 @@ Create chart name and version as used by the chart label.
 {{- define "themeparks-bot.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create dns name for redis.
+*/}}
+{{- define "redis.dns" -}}
+{{- printf "%s-redis-ha-master-svc.%s" .Release.Name .Release.Namespace -}}
+{{- end -}}

@@ -55,5 +55,5 @@ export const storageAccountName = process.env.STORAGE_ACCOUNT_NAME;
 export const storageAccountKey = process.env.STORAGE_ACCOUNT_KEY;
 
 export const redisHost = process.env.REDIS_HOST;
-export const redisPort = process.env.REDIS_PORT;
-export const redisKey = process.env.REDIS_KEY;
+export const redisPort = process.env.REDIS_PORT || 6379;
+export const redisKey = process.env.REDIS_KEY || "";
