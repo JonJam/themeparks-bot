@@ -18,7 +18,7 @@ resources:
 
 # service is the type and HTTP port for the themeparks-bot service.
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
 
 # secret is the required secrets for the themeparks-bot container.
