@@ -12,7 +12,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - dev-tpb.westeurope.cloudapp.azure.com
+  - host: dev-tpb.westeurope.cloudapp.azure.com
     http:
       paths:
       - path: /api/messages
