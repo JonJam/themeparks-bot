@@ -6,8 +6,10 @@ import cache from "./cache";
 
 const log = debug("services:parks");
 
-// Configuring caching for themeparks module.
-Settings.Cache = cache;
+if (cache) {
+  // Configuring caching for themeparks module.
+  Settings.Cache = cache;
+}
 
 // Map of theme park name to class.
 const parksMap = new Map<string, Park>(
