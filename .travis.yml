@@ -7,7 +7,7 @@ before_install:
   - sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893
   - sudo apt-get -qq update
   - sudo apt-get install -qq apt-transport-https
-  - sudo apt-get install -qq azure-cli
+  - sudo apt-get install -allow-unauthenticated -qq azure-cli
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
